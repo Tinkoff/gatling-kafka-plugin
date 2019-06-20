@@ -1,0 +1,6 @@
+language: scala
+jdk:
+  - oraclejdk8
+  - openjdk11
+script:
+  - sbt assembly
