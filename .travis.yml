@@ -3,4 +3,4 @@ jdk:
   - oraclejdk8
   - openjdk11
 script:
-  - sbt assembly
+  - sbt compile
