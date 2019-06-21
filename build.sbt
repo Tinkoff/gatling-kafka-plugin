@@ -26,7 +26,7 @@ lazy val root = (project in file("."))
     ),
     homepage := Some(url("https://github.com/TinkoffCreditSystems/gatling-kafka-plugin")),
     scmInfo := Some(ScmInfo(url("https://github.com/TinkoffCreditSystems/gatling-kafka-plugin"), "git@github.com:TinkoffCreditSystems/gatling-kafka-plugin.git")),
-    developers := List(Developer("jigarkhwar", "Ioann Akhaltsev", "i.akhaltsev@tinkoff.ru", url("https://github.com/Jijka"))),
+    developers := List(Developer("jigarkhwar", "Ioann Akhaltsev", "i.akhaltsev@tinkoff.ru", url("https://github.com/jigarkhwar"))),
     licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0")),
     publishMavenStyle := true,
     // Add sonatype repository settings
