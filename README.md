@@ -1,16 +1,21 @@
-# gatling-kafka
+# gatling-kafka-plugin
 
 # Introduction
 
-Plugin for support Kafka in Gatling
+Plugin to support Kafka in Gatling
 
 # Usage
 
-## Build 
-For local usage clone project from github repository and run in project folder `sbt publishLocal`. 
+### Getting Started
 
-After that you may include plugin as dependency in project with your tests. Write 
-`libraryDependencies += "ru.tinkoff" %% "gatling-kafka-plugin" % <version> % Test` in build.sbt
+gatling-kafka-plugin is currently available for Scala 2.12
+
+You may include plugin as dependency in project with your tests. Write 
+
+```scala
+libraryDependencies += "ru.tinkoff" %% "gatling-kafka-plugin" % <version> % Test
+```
+
 
 ## Example Scenarios
-Examples in \src\test\scala\ru\tinkoff\gatling\kafka\examples\
+Examples [here](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/tree/master/src/test/scala/ru/tinkoff/gatling/kafka/examples)
