@@ -4,7 +4,7 @@ object Dependencies {
 
   lazy val gatling: Seq[ModuleID] = Seq(
     "io.gatling" % "gatling-core"
-  ).map(_ % "3.1.2" % "provided")
+  ).map(_ % "3.1.3" % "provided")
 
   lazy val kafka: Seq[ModuleID] = Seq(
     ("org.apache.kafka" % "kafka-clients" % "2.2.0")
