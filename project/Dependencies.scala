@@ -10,7 +10,6 @@ object Dependencies {
     ("org.apache.kafka" % "kafka-clients" % "2.2.0")
       .exclude("org.slf4j", "slf4j-api"))
 
-  lazy val avro4s: Seq[ModuleID] = Seq(
-    "com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided")
+  lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided")
 
 }
