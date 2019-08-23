@@ -11,6 +11,6 @@ object Dependencies {
       .exclude("org.slf4j", "slf4j-api"))
 
   lazy val avro4s: Seq[ModuleID] = Seq(
-    "com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0")
+    "com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided")
 
 }
