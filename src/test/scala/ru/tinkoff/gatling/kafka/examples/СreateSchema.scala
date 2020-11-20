@@ -1,5 +1,3 @@
-package ru.tinkoff.load.cadb
-
 import ru.tinkoff.gatling.kafka.avroScheme.{AvroSchemeClassesCreator, AvroSchemeDownloader}
 
 object ApplicationTest extends App{
