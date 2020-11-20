@@ -48,3 +48,6 @@ To download avro-schema and create java classes you should add dependencies in `
 ```
 
 To run you should create scala object in root project directory and type `sbt run`.
+
+### Example download avro-schema
+Example [here](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/tree/master/createSchema-example.scala)
