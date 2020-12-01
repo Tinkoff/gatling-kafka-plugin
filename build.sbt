@@ -13,6 +13,16 @@ lazy val root = (project in file("."))
     libraryDependencies ++= gradle_base,
     libraryDependencies ++= gradle_files,
     libraryDependencies ++= ant,
+    resolvers ++= Seq(
+      "Confluent" at "https://packages.confluent.io/maven/",
+      "Gradle" at "https://plugins.gradle.org/m2/",
+      "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
+      "spring" at "https://repo.spring.io/plugins-release/",
+      "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
+      "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
+      "jcip" at "https://repository.mulesoft.org/nexus/content/repositories/public/",
+      Resolver.sonatypeRepo("public")
+    ),
     scalacOptions ++= Seq(
       "-encoding",
       "UTF-8", // Option and arguments on same line
