@@ -1,6 +1,11 @@
 language: scala
+
 jdk:
-  - oraclejdk8
   - openjdk11
-script:
-  - sbt compile
+
+jobs:
+  include:
+    - stage: Tests
+      name: Unit tests
+      script:
+        - sbt compile test
