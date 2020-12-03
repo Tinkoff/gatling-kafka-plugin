@@ -1,4 +1,4 @@
-# gatling-kafka-plugin
+# gatling-kafka-plugin [Maven Central](https://img.shields.io/maven-central/v/ru.tinkoff/gatling-kafka-plugin_2.12.svg?color=success)](https://search.maven.org/search?q=ru.tinkoff.gatling-kafka)
 
 # Introduction
 
