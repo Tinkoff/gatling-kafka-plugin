@@ -31,7 +31,7 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
         sendRequest(requestName, producer, attr, throttled, session)
 
       outcome.onFailure(
-        errorMessage => statsEngine.reportUnbuildableRequest(session, requestName, errorMessage)
+        errorMessage => statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage)
       )
 
       outcome
@@ -61,8 +61,10 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
         (_: RecordMetadata, e: Exception) => {
 
           val requestEndDate = clock.nowMillis
+
           statsEngine.logResponse(
-            session,
+            session.scenario,
+            session.groups,
             requestName,
             startTimestamp = requestStartDate,
             endTimestamp = requestEndDate,
@@ -71,10 +73,9 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
             if (e == null) None else Some(e.getMessage)
           )
 
-          if (throttled) {
-            coreComponents.throttler.throttle(session.scenario, () => next ! session)
-          } else {
-            next ! session
+          coreComponents.throttler match {
+            case Some(th) if throttled => th.throttle(session.scenario, () => next ! session)
+            case _                     => next ! session
           }
 
         }
