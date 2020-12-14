@@ -24,27 +24,41 @@ Examples [here](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/tre
 To download avro-schema and create java classes you should add dependencies in `build.sbt`
  
 ```
-     lazy val gradle_logging: Seq[ModuleID] = Seq(
-       "org.gradle" % "gradle-logging"
-     ).map(_ % "4.3" % "runtime")
-   
-     lazy val gradle_base: Seq[ModuleID] = Seq(
-       "org.gradle" % "gradle-base-services"
-     ).map(_ % "4.3-rc-4" % "runtime")
-   
-     lazy val gradle_files: Seq[ModuleID] = Seq(
-       "org.gradle" % "gradle-core",
-       "org.gradle" % "gradle-messaging",
-       "org.gradle" % "gradle-native"
-     ).map(_ % "6.1.1" % "runtime")
-   
-     lazy val ant: Seq[ModuleID] = Seq(
-       "org.apache.ant" % "ant"
-     ).map(_ % "1.8.2")
-   
-     lazy val net_jcip: Seq[ModuleID] = Seq(
-       "net.jcip" % "annotations"
-     ).map(_ % "1.0")
+         libraryDependencies ++= Seq(
+           "org.gradle" % "gradle-logging"
+         ).map(_ % "4.3" % "runtime"),
+
+         libraryDependencies ++= Seq(
+           "org.gradle" % "gradle-base-services"
+         ).map(_ % "4.3-rc-4" % "runtime"),
+
+         libraryDependencies ++= Seq(
+           "org.gradle" % "gradle-core",
+           "org.gradle" % "gradle-messaging",
+           "org.gradle" % "gradle-native"
+         ).map(_ % "6.1.1" % "runtime"),
+
+         libraryDependencies ++= Seq(
+           "org.apache.ant" % "ant"
+         ).map(_ % "1.8.2"),
+
+         libraryDependencies ++= Seq(
+           "net.jcip" % "annotations"
+         ).map(_ % "1.0"),
+
+         libraryDependencies ++= Seq(
+           "org.apache.avro" % "avro-maven-plugin"
+         ).map(_ % "1.10.0"),
+
+         resolvers ++= Seq(
+           "Confluent" at "https://packages.confluent.io/maven/",
+           "Gradle" at "https://plugins.gradle.org/m2/",
+           "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
+           "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
+           "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
+           "jcip" at "https://repository.mulesoft.org/nexus/content/repositories/public/",
+           Resolver.sonatypeRepo("public")
+         )
 ```
 
 To run you should create scala object in root project directory and type `sbt run`.
