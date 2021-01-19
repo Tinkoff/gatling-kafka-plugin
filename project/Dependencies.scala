@@ -13,8 +13,8 @@ object Dependencies {
   lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided")
 
   lazy val gradleKafka: Seq[ModuleID] = Seq(
-    "com.github.imflog" % "kafka-schema-registry-gradle-plugin"
-  ).map(_ % "0.9.0")
+    "com.github.imflog.kafka-schema-registry-gradle-plugin" % "com.github.imflog.kafka-schema-registry-gradle-plugin.gradle.plugin"
+  ).map(_ % "1.1.0")
 
   lazy val gradleAvro: Seq[ModuleID] = Seq(
     "com.commercehub.gradle.plugin" % "gradle-avro-plugin"
