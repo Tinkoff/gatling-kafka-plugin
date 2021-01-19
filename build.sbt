@@ -4,6 +4,7 @@ lazy val root = (project in file("."))
   .enablePlugins(GitVersioning)
   .settings(
     name := "gatling-kafka-plugin",
+    scalaVersion := "2.12.13",
     libraryDependencies ++= gatling,
     libraryDependencies ++= kafka,
     libraryDependencies ++= avro4s,
