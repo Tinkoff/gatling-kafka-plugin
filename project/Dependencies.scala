@@ -39,8 +39,8 @@ object Dependencies {
     "org.apache.ant" % "ant"
   ).map(_ % "1.8.2")
 
-  lazy val net_jcip: Seq[ModuleID] = Seq(
-    "net.jcip" % "annotations"
-  ).map(_ % "1.0")
+//  lazy val net_jcip: Seq[ModuleID] = Seq(
+//    "net.jcip" % "annotations"
+//  ).map(_ % "1.0")
 
 }
