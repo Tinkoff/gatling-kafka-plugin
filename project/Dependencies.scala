@@ -10,23 +10,20 @@ object Dependencies {
     ("org.apache.kafka" % "kafka-clients" % "2.2.2")
       .exclude("org.slf4j", "slf4j-api"))
 
-  lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided")
+  lazy val avro4s: Seq[ModuleID] = Seq(("com.sksamuel.avro4s" %% "avro4s-core" % "1.9.0" % "provided").exclude("org.slf4j", "slf4j-api"))
 
-  lazy val gradleKafka: Seq[ModuleID] = Seq(
-    "com.github.imflog.kafka-schema-registry-gradle-plugin" % "com.github.imflog.kafka-schema-registry-gradle-plugin.gradle.plugin"
-  ).map(_ % "1.1.0")
+  lazy val gradleKafka: Seq[ModuleID] = Seq((
+    "com.github.imflog.kafka-schema-registry-gradle-plugin" % "com.github.imflog.kafka-schema-registry-gradle-plugin.gradle.plugin" % "0.9.0").exclude("org.slf4j", "slf4j-api"))
+//  ).map(_ % "1.1.0")
 
-  lazy val gradleAvro: Seq[ModuleID] = Seq(
-    "com.commercehub.gradle.plugin" % "gradle-avro-plugin"
-  ).map(_ % "0.20.0")
+  lazy val gradleAvro: Seq[ModuleID] = Seq((
+    "com.commercehub.gradle.plugin" % "gradle-avro-plugin" % "0.20.0").exclude("org.slf4j", "slf4j-api"))
 
-  lazy val avroPlugin: Seq[ModuleID] = Seq(
-    "org.apache.avro" % "avro-maven-plugin"
-  ).map(_ % "1.09.0")
+  lazy val avroPlugin: Seq[ModuleID] = Seq((
+    "org.apache.avro" % "avro-maven-plugin" % "1.09.0").exclude("org.slf4j", "slf4j-api"))
 
-  lazy val gradle_logging: Seq[ModuleID] = Seq(
-    "org.gradle" % "gradle-logging"
-  ).map(_ % "4.3" % "runtime")
+  lazy val gradle_logging: Seq[ModuleID] = Seq((
+    "org.gradle" % "gradle-logging"  % "4.3" % "runtime").exclude("org.slf4j", "slf4j-api"))
 
   lazy val gradle_base: Seq[ModuleID] = Seq(
     "org.gradle" % "gradle-base-services"
