@@ -1,7 +1,5 @@
 ThisBuild / organization := "ru.tinkoff"
-ThisBuild / scalaVersion := "2.12.12"
-
-ThisBuild / publishMavenStyle := true
+ThisBuild / scalaVersion := "2.12.13"
 
 ThisBuild / publishTo := Some(
   if (isSnapshot.value)
@@ -26,8 +24,3 @@ ThisBuild / developers := List(
 ThisBuild / description := "Plugin to support kafka performance testing in Gatling(3.x.x)."
 ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / homepage := Some(url("https://github.com/TinkoffCreditSystems/gatling-kafka-plugin"))
-
-// Remove all additional repository other than Maven Central from POM
-ThisBuild / pomIncludeRepository := { _ =>
-  false
-}

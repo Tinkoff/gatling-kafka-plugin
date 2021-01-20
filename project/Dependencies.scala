@@ -43,4 +43,5 @@ object Dependencies {
   lazy val ant: Seq[ModuleID] = Seq(
     ("org.apache.ant" % "ant" % "1.8.2")
       .exclude("org.slf4j", "slf4j-api"))
+  
 }
