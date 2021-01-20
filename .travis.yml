@@ -5,6 +5,10 @@ jdk:
 
 jobs:
   include:
+    - stage: Compile
+      name: Compile
+      script:
+        - sbt compile
     - stage: Tests
       name: Unit tests
       script:
