@@ -12,7 +12,9 @@ lazy val root = (project in file("."))
     libraryDependencies ++= gradleAvro,
     libraryDependencies ++= gradle_logging,
     libraryDependencies ++= gradle_base,
-    libraryDependencies ++= gradle_files,
+    libraryDependencies ++= gradle_files_gradle_core,
+    libraryDependencies ++= gradle_files_gradle_messaging,
+    libraryDependencies ++= gradle_files_gradle_native,
     libraryDependencies ++= ant,
     resolvers ++= Seq(
       "Confluent" at "https://packages.confluent.io/maven/",

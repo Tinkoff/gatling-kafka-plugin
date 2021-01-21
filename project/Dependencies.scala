@@ -34,11 +34,21 @@ object Dependencies {
     ("org.gradle" % "gradle-base-services" % "4.3-rc-4" % "runtime")
       .exclude("org.slf4j", "slf4j-api"))
 
-  lazy val gradle_files: Seq[ModuleID] = Seq(
-    "org.gradle" % "gradle-core",
-    "org.gradle" % "gradle-messaging",
-    "org.gradle" % "gradle-native"
-  ).map(_ % "6.1.1" % "runtime")
+  lazy val gradle_files_gradle_core: Seq[ModuleID] = Seq(
+    ("org.gradle" % "gradle-core" % "6.1.1" % "runtime")
+      .exclude("org.slf4j", "slf4j-api"))
+  lazy val gradle_files_gradle_messaging: Seq[ModuleID] = Seq(
+    ("org.gradle" % "gradle-messaging" % "6.1.1" % "runtime")
+      .exclude("org.slf4j", "slf4j-api"))
+  lazy val gradle_files_gradle_native: Seq[ModuleID] = Seq(
+    ("org.gradle" % "gradle-native" % "6.1.1" % "runtime")
+      .exclude("org.slf4j", "slf4j-api"))
+
+//  lazy val gradle_files: Seq[ModuleID] = Seq(
+//    "org.gradle" % "",
+//    "org.gradle" % "",
+//    "org.gradle" % ""
+//  ).map(_ % "6.1.1" % "runtime")
 
   lazy val ant: Seq[ModuleID] = Seq(
     ("org.apache.ant" % "ant" % "1.8.2")
