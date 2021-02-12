@@ -1,5 +1,5 @@
 # gatling-kafka-plugin 
-[![Build Status](https://travis-ci.com/TinkoffCreditSystems/gatling-kafka-plugin.svg?branch=master)](https://travis-ci.com/TinkoffCreditSystems/gatling-kafka-plugin) [![Maven Central](https://img.shields.io/maven-central/v/ru.tinkoff/gatling-kafka-plugin_2.12.svg?color=success)](https://search.maven.org/search?q=ru.tinkoff.gatling-kafka)
+![Build](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/workflows/Build/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/ru.tinkoff/gatling-kafka-plugin_2.12.svg?color=success)](https://search.maven.org/search?q=ru.tinkoff.gatling-kafka)
 # Introduction
 Plugin to support Kafka in Gatling
 # Usage
