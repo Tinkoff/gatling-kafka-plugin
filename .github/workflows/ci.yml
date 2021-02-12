@@ -1,0 +1,34 @@
+name: Build
+
+on:
+  pull_request:
+  push:
+
+jobs:
+  test:
+    name: Test and Publish Release
+    runs-on: ubuntu-20.04
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Scala
+        uses: olafurpg/setup-scala@v10
+        with:
+          java-version: adopt@1.11
+
+      - name: Setup GPG
+        uses: olafurpg/setup-gpg@v3
+
+      - name: Test
+        run: sbt compile test
+
+      - name: Publish Release
+        run: sbt ci-release
+        env:
+          PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
+          PGP_SECRET: ${{ secrets.PGP_SECRET }}
+          SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
+          SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
