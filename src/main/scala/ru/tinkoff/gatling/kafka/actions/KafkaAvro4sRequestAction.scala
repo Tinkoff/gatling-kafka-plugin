@@ -44,9 +44,14 @@ class KafkaAvro4sRequestAction[K, V](val producer: KafkaProducer[K, GenericRecor
                   session: Session): Validation[Unit] = {
 
     attr payload session map { payload =>
-      val record = attr.key
-        .map(k => new ProducerRecord(kafkaProtocol.topic, k(session).toOption.get, attr.format.to(payload)))
-        .getOrElse(new ProducerRecord(kafkaProtocol.topic, attr.format.to(payload)))
+      val headers = attr.headers
+        .map(h => h(session).toOption.get)
+        .orNull
+      val key = attr.key
+        .map(k => k(session).toOption.get)
+        .getOrElse(null.asInstanceOf[K])
+
+      val record = new ProducerRecord(kafkaProtocol.topic, null, key, attr.format.to(payload), headers)
 
       val requestStartDate = clock.nowMillis
 

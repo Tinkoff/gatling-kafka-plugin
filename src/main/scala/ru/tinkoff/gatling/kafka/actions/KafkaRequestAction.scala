@@ -47,12 +47,21 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
                           session: Session): Validation[Unit] = {
 
     kafkaAttributes payload session map { payload =>
-      val record = kafkaAttributes.key match {
-        case Some(k) =>
-          new ProducerRecord[K, V](kafkaProtocol.topic, k(session).toOption.get, payload)
-        case None =>
-          new ProducerRecord[K, V](kafkaProtocol.topic, payload)
-      }
+      val key = kafkaAttributes.key
+        .map(k => k(session).toOption.get)
+        .getOrElse(null.asInstanceOf[K])
+
+      val headers = kafkaAttributes.headers
+        .map(h => h(session).toOption.get)
+        .orNull
+
+      val record = new ProducerRecord[K, V](
+        kafkaProtocol.topic,
+        null,
+        key,
+        payload,
+        headers
+      )
 
       val requestStartDate = clock.nowMillis
 
