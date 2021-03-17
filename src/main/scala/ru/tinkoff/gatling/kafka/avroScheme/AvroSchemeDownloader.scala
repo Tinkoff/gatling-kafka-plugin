@@ -1,16 +1,25 @@
 package ru.tinkoff.gatling.kafka.avroScheme
 
 import com.github.imflog.schema.registry.RegistryClientWrapper
-import com.github.imflog.schema.registry.download.{DownloadSubject, DownloadTaskAction}
+import com.github.imflog.schema.registry.tasks.download.{DownloadSubject, DownloadTaskAction}
 
 import java.io.File
 import java.util
+import scala.jdk.CollectionConverters.MapHasAsJava
 
 object AvroSchemeDownloader {
   def download(url: String, topicName: String, version: Int, auth: String): Int = {
-    val subject = new util.ArrayList[DownloadSubject]
+
+    val subject: util.ArrayList[DownloadSubject] = new util.ArrayList[DownloadSubject]
+
     subject.add(new DownloadSubject(topicName, "", version))
-    val dwnld   = new DownloadTaskAction(RegistryClientWrapper.INSTANCE.client(url, auth), subject, new File("resources"))
+
+    val dwnld = new DownloadTaskAction(
+      RegistryClientWrapper.INSTANCE.client(url, auth, Map.empty[String, String].asJava),
+      new File("resources"),
+      subject
+    )
+
     dwnld.run
   }
 }

@@ -14,6 +14,7 @@ lazy val root = (project in file("."))
     libraryDependencies ++= gradle_base,
     libraryDependencies ++= gradle_files,
     libraryDependencies ++= ant,
+    libraryDependencies ++= epoll,
     resolvers ++= Seq(
       "Confluent" at "https://packages.confluent.io/maven/",
       "Gradle" at "https://plugins.gradle.org/m2/",
@@ -25,7 +26,7 @@ lazy val root = (project in file("."))
     ),
     scalacOptions ++= Seq(
       "-encoding",
-      "UTF-8", // Option and arguments on same line
+      "UTF-8",            // Option and arguments on same line
       "-Xfatal-warnings", // New lines for each options
       "-deprecation",
       "-feature",

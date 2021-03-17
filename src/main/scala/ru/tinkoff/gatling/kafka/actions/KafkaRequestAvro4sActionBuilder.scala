@@ -9,7 +9,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import ru.tinkoff.gatling.kafka.protocol.{KafkaComponents, KafkaProtocol}
 import ru.tinkoff.gatling.kafka.request.builder.Avro4sAttributes
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class KafkaRequestAvro4sActionBuilder[K, V](attr: Avro4sAttributes[K, V]) extends ActionBuilder with NameGen {
   override def build(ctx: ScenarioContext, next: Action): Action = {

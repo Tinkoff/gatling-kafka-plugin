@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.KafkaProducer
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 import ru.tinkoff.gatling.kafka.request.builder.KafkaAttributes
 
-import scala.collection.JavaConverters._
+import scala.jdk.CollectionConverters._
 
 class KafkaRequestActionBuilder[K, V](attr: KafkaAttributes[K, V]) extends ActionBuilder {
 

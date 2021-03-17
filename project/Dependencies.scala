@@ -3,8 +3,12 @@ import sbt._
 object Dependencies {
 
   lazy val gatling: Seq[ModuleID] = Seq(
-    "io.gatling" % "gatling-highcharts" % "3.5.1" % "provided",
     "io.gatling" % "gatling-core" % "3.5.1" % "provided"
+  )
+
+  lazy val epoll: Seq[ModuleID] = Seq(
+    "io.netty" % "netty-transport-native-epoll"  % "4.1.58.Final" classifier "linux-x86_64",
+    "io.netty" % "netty-transport-native-kqueue" % "4.1.58.Final" classifier "osx-x86_64"
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
