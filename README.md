@@ -1,10 +1,10 @@
 # gatling-kafka-plugin 
-![Build](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/workflows/Build/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/ru.tinkoff/gatling-kafka-plugin_2.12.svg?color=success)](https://search.maven.org/search?q=ru.tinkoff.gatling-kafka)
+![Build](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/workflows/Build/badge.svg) [![Maven Central](https://img.shields.io/maven-central/v/ru.tinkoff/gatling-kafka-plugin_2.13.svg?color=success)](https://search.maven.org/search?q=ru.tinkoff.gatling-kafka)
 # Introduction
 Plugin to support Kafka in Gatling
 # Usage
 ### Getting Started
-gatling-kafka-plugin is currently available for Scala 2.12
+gatling-kafka-plugin is currently available for Scala 2.13
 
 You may include plugin as dependency in project with your tests. Write 
 ```scala
@@ -43,11 +43,10 @@ To download avro-schema and create java classes you should add dependencies in `
     
      resolvers ++= Seq(
        "Confluent" at "https://packages.confluent.io/maven/",
-       "Gradle" at "https://plugins.gradle.org/m2/",
-       "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
-       "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
-       "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
        "jcip" at "https://repository.mulesoft.org/nexus/content/repositories/public/",
+       "Gradle Releases" at "https://repo.gradle.org/gradle/libs-releases-local/",
+       "Gradle Plugins" at "https://plugins.gradle.org/m2/",
+       "JitPack" at "https://jitpack.io",
        Resolver.sonatypeRepo("public")
      )
 ```
