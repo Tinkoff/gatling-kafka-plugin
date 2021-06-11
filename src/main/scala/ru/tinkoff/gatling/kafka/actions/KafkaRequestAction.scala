@@ -12,13 +12,14 @@ import org.apache.kafka.clients.producer._
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 import ru.tinkoff.gatling.kafka.request.builder.KafkaAttributes
 
-class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
-                               val attr: KafkaAttributes[K, V],
-                               val coreComponents: CoreComponents,
-                               val kafkaProtocol: KafkaProtocol,
-                               val throttled: Boolean,
-                               val next: Action)
-    extends ExitableAction with NameGen {
+class KafkaRequestAction[K, V](
+    val producer: KafkaProducer[K, V],
+    val attr: KafkaAttributes[K, V],
+    val coreComponents: CoreComponents,
+    val kafkaProtocol: KafkaProtocol,
+    val throttled: Boolean,
+    val next: Action
+) extends ExitableAction with NameGen {
 
   override val name: String    = genName("kafkaRequest")
   val statsEngine: StatsEngine = coreComponents.statsEngine
@@ -30,8 +31,8 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
       val outcome =
         sendRequest(requestName, producer, attr, throttled, session)
 
-      outcome.onFailure(
-        errorMessage => statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage)
+      outcome.onFailure(errorMessage =>
+        statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage)
       )
 
       outcome
@@ -40,11 +41,13 @@ class KafkaRequestAction[K, V](val producer: KafkaProducer[K, V],
 
   }
 
-  private def sendRequest(requestName: String,
-                          producer: Producer[K, V],
-                          kafkaAttributes: KafkaAttributes[K, V],
-                          throttled: Boolean,
-                          session: Session): Validation[Unit] = {
+  private def sendRequest(
+      requestName: String,
+      producer: Producer[K, V],
+      kafkaAttributes: KafkaAttributes[K, V],
+      throttled: Boolean,
+      session: Session
+  ): Validation[Unit] = {
 
     kafkaAttributes payload session map { payload =>
       val key = kafkaAttributes.key

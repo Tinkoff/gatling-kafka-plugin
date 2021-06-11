@@ -16,7 +16,10 @@ object Dependencies {
       .exclude("org.slf4j", "slf4j-api")
   )
 
-  lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "4.0.4" % "provided")
+  lazy val avro4s: Seq[ModuleID] = Seq(
+    "com.sksamuel.avro4s" %% "avro4s-core"           % "4.0.4" % "provided",
+    "io.confluent"         % "kafka-avro-serializer" % "5.3.0"
+  )
 
   lazy val gradleKafka: Seq[ModuleID]    = Seq(
     "com.github.imflog" % "kafka-schema-registry-gradle-plugin"

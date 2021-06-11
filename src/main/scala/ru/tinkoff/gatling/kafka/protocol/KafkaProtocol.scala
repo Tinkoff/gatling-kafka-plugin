@@ -27,4 +27,5 @@ case class KafkaProtocol(topic: String, properties: Map[String, Object]) extends
 
   def properties(properties: Map[String, Object]): KafkaProtocol =
     copy(properties = properties)
+
 }
