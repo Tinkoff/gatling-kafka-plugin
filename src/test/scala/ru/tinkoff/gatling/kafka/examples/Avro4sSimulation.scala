@@ -27,6 +27,25 @@ class Avro4sSimulation extends Simulation {
           "org.apache.kafka.common.serialization.StringSerializer"
       ))
 
+
+
+  val kafkaAclConf: KafkaProtocol = kafka
+    .topic("my.acl.topic")
+    .properties(
+      Map(
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9092",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "io.confluent.kafka.serializers.KafkaAvroSerializer",
+        "value.subject.name.strategy"                -> "io.confluent.kafka.serializers.subject.RecordNameStrategy",
+        "schema.registry.url"                        -> "http://schema.registry.com",
+        "security.protocol"                          -> "SASL_PLAINTEXT",
+        "sasl.mechanism"                             -> "SCRAM-SHA-512",
+        "sasl.jaas.config"                           -> s"""org.apache.kafka.common.security.scram.ScramLoginModule required username="MY-USER" password="SECRET-PASSWORD";"""
+      ))
+
+
+
   case class Ingredient(name: String, sugar: Double, fat: Double)
 
   implicit lazy val ingridientToRecord: ToRecord[Ingredient]     = ToRecord.apply
