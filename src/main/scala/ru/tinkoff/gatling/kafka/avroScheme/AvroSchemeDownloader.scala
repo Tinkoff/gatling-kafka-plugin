@@ -17,7 +17,7 @@ object AvroSchemeDownloader {
     val dwnld = new DownloadTaskAction(
       RegistryClientWrapper.INSTANCE.client(url, auth, Map.empty[String, String].asJava),
       new File("resources"),
-      subject
+      subject,
     )
 
     dwnld.run

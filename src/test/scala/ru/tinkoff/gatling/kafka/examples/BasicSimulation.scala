@@ -15,6 +15,7 @@ class BasicSimulation extends Simulation {
   val scn: ScenarioBuilder = scenario("Basic")
     .exec(
       kafka("BasicRequest")
-        .send[String]("foo"))
+        .send[String]("foo"),
+    )
 
 }

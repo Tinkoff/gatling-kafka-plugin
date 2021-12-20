@@ -3,7 +3,7 @@ import Dependencies._
 lazy val root = (project in file("."))
   .enablePlugins(GitVersioning)
   .settings(
-    name := "gatling-kafka-plugin",
+    name         := "gatling-kafka-plugin",
     scalaVersion := "2.13.7",
     libraryDependencies ++= gatling,
     libraryDependencies ++= kafka,
@@ -20,7 +20,7 @@ lazy val root = (project in file("."))
       "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
       "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
       "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
-      Resolver.sonatypeRepo("public")
+      Resolver.sonatypeRepo("public"),
     ),
     scalacOptions ++= Seq(
       "-encoding",
@@ -32,6 +32,6 @@ lazy val root = (project in file("."))
       "-language:implicitConversions",
       "-language:higherKinds",
       "-language:existentials",
-      "-language:postfixOps"
-    )
+      "-language:postfixOps",
+    ),
   )
