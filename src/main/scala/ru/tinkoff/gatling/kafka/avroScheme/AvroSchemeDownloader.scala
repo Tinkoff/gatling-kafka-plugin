@@ -18,6 +18,7 @@ object AvroSchemeDownloader {
       RegistryClientWrapper.INSTANCE.client(url, auth, Map.empty[String, String].asJava),
       new File("resources"),
       subject,
+      true
     )
 
     dwnld.run
