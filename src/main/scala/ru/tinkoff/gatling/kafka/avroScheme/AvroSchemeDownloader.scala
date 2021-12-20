@@ -12,7 +12,7 @@ object AvroSchemeDownloader {
 
     val subject: util.ArrayList[DownloadSubject] = new util.ArrayList[DownloadSubject]
 
-    subject.add(new DownloadSubject(topicName, "", version))
+    subject.add(new DownloadSubject(topicName, "", version, false))
 
     val dwnld = new DownloadTaskAction(
       RegistryClientWrapper.INSTANCE.client(url, auth, Map.empty[String, String].asJava),
