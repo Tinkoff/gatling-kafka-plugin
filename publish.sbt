@@ -1,6 +1,4 @@
 ThisBuild / organization := "ru.tinkoff"
-ThisBuild / scalaVersion := "2.13.7"
-
 ThisBuild / scmInfo     := Some(
   ScmInfo(
     url("https://github.com/TinkoffCreditSystems/gatling-kafka-plugin"),
