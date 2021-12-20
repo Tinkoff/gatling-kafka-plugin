@@ -3,24 +3,19 @@ import sbt._
 object Dependencies {
 
   lazy val gatling: Seq[ModuleID] = Seq(
-    "io.gatling" % "gatling-core" % "3.5.1" % "provided"
-  )
-
-  lazy val epoll: Seq[ModuleID] = Seq(
-    "io.netty" % "netty-transport-native-epoll"  % "4.1.58.Final" classifier "linux-x86_64",
-    "io.netty" % "netty-transport-native-kqueue" % "4.1.58.Final" classifier "osx-x86_64"
+    "io.gatling" % "gatling-core" % "3.7.3" % "provided"
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
-    ("org.apache.kafka" % "kafka-clients" % "2.7.0")
+    ("org.apache.kafka" % "kafka-clients" % "2.8.0")
       .exclude("org.slf4j", "slf4j-api")
   )
 
-  lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "4.0.4" % "provided")
+  lazy val avro4s: Seq[ModuleID] = Seq("com.sksamuel.avro4s" %% "avro4s-core" % "4.0.12" % "provided")
 
   lazy val gradleKafka: Seq[ModuleID]    = Seq(
     "com.github.imflog" % "kafka-schema-registry-gradle-plugin"
-  ).map(_ % "1.1.1")
+  ).map(_ % "1.6.0")
 
   lazy val gradleAvro: Seq[ModuleID]     = Seq(
     "com.commercehub.gradle.plugin" % "gradle-avro-plugin"
@@ -48,8 +43,5 @@ object Dependencies {
     "org.apache.ant" % "ant"
   ).map(_ % "1.8.2")
 
-  lazy val net_jcip: Seq[ModuleID]       = Seq(
-    "net.jcip" % "annotations"
-  ).map(_ % "1.0")
 
 }
