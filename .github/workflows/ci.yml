@@ -17,7 +17,7 @@ jobs:
       - name: Setup Scala
         uses: olafurpg/setup-scala@v13
         with:
-          java-version: adopt@1.17
+          java-version: openjdk@1.17.0
 
       - name: Setup GPG
         uses: olafurpg/setup-gpg@v3
