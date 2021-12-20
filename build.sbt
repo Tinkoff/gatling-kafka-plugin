@@ -20,6 +20,7 @@ lazy val root = (project in file("."))
       "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
       "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
       "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
+      "jitpack" at "https://jitpack.io",
       Resolver.sonatypeRepo("public"),
     ),
     scalacOptions ++= Seq(
