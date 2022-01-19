@@ -3,7 +3,7 @@ import sbt._
 object Dependencies {
 
   lazy val gatling: Seq[ModuleID] = Seq(
-    "io.gatling" % "gatling-core" % "3.7.3" % "provided",
+    "io.gatling" % "gatling-core" % "3.7.4" % "provided",
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
