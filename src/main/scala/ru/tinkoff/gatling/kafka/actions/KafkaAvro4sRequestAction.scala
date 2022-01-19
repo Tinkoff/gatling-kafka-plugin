@@ -19,7 +19,7 @@ class KafkaAvro4sRequestAction[K, V](
     val coreComponents: CoreComponents,
     val kafkaProtocol: KafkaProtocol,
     val throttled: Boolean,
-    val next: Action
+    val next: Action,
 ) extends ExitableAction with NameGen {
 
   val statsEngine: StatsEngine = coreComponents.statsEngine
@@ -31,7 +31,7 @@ class KafkaAvro4sRequestAction[K, V](
       val outcome = sendRequest(requestName, producer, attr, throttled, session)
 
       outcome.onFailure(errorMessage =>
-        statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage)
+        statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage),
       )
 
       outcome
@@ -43,7 +43,7 @@ class KafkaAvro4sRequestAction[K, V](
       producer: KafkaProducer[K, GenericRecord],
       attr: Avro4sAttributes[K, V],
       throttled: Boolean,
-      session: Session
+      session: Session,
   ): Validation[Unit] = {
 
     attr payload session map { payload =>
@@ -72,7 +72,7 @@ class KafkaAvro4sRequestAction[K, V](
             requestEndDate,
             if (e == null) OK else KO,
             None,
-            if (e == null) None else Some(e.getMessage)
+            if (e == null) None else Some(e.getMessage),
           )
 
           coreComponents.throttler match {
@@ -80,7 +80,7 @@ class KafkaAvro4sRequestAction[K, V](
             case _                     => next ! session
           }
 
-        }
+        },
       )
 
     }

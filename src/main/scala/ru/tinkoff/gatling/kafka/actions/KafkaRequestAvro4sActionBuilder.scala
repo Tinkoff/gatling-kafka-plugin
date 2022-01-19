@@ -27,7 +27,7 @@ class KafkaRequestAvro4sActionBuilder[K, V](attr: Avro4sAttributes[K, V]) extend
       coreComponents,
       kafkaComponents.kafkaProtocol,
       throttled,
-      next
+      next,
     )
 
   }

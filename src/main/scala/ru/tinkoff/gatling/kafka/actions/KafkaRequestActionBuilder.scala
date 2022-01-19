@@ -28,7 +28,7 @@ class KafkaRequestActionBuilder[K, V](attr: KafkaAttributes[K, V]) extends Actio
       coreComponents,
       kafkaComponents.kafkaProtocol,
       throttled,
-      next
+      next,
     )
   }
 }
