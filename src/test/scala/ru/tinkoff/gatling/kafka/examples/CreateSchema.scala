@@ -1,11 +1,13 @@
 package ru.tinkoff.gatling.kafka.examples
 
-import ru.tinkoff.gatling.kafka.avroScheme.{AvroSchemeClassesCreator, AvroSchemeDownloader}
+import ru.tinkoff.gatling.kafka.avroScheme.AvroSchemeDownloader
 
+/*
+ Alternative way to download schemas from schema-registry without sbt task.
+ Run this object to load schemas before testing
+ */
 object CreateSchema extends App {
+  val downloader = AvroSchemeDownloader("http://test-schema-registry")
 
-  AvroSchemeDownloader.download("http://vm-kafka-schema-registry:8081", "testTopic", 1, "str")
-
-  AvroSchemeClassesCreator.create("resources/testTopic.avsc", "src/test/scala")
-
+  downloader.schemaToFile("hello-world", 1)
 }
