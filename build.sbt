@@ -1,26 +1,21 @@
 import Dependencies._
+//import ru.tinkoff.load.avro.RegistrySubject
+
+val scalaV      = "2.13.8"
+val avroSchemas = Seq() // for example Seq(RegistrySubject("test-hello-schema", 1))
 
 lazy val root = (project in file("."))
   .enablePlugins(GitVersioning)
   .settings(
-    name              := "gatling-kafka-plugin",
-    scalaVersion      := "2.13.8",
+    name         := "gatling-kafka-plugin",
+    scalaVersion := scalaV,
     libraryDependencies ++= gatling,
     libraryDependencies ++= kafka,
-    libraryDependencies ++= avro4s,
-    libraryDependencies ++= gradleKafka,
-    libraryDependencies ++= gradleAvro,
-    libraryDependencies ++= gradle_logging,
-    libraryDependencies ++= gradle_base,
-    libraryDependencies ++= gradle_files,
-    libraryDependencies ++= ant,
+    libraryDependencies ++= Seq(avro4s, avroCore),
+    schemaRegistrySubjects ++= avroSchemas,
+//    schemaRegistryUrl := "http://test-schema-registry:8081",
     resolvers ++= Seq(
       "Confluent" at "https://packages.confluent.io/maven/",
-      "Gradle" at "https://plugins.gradle.org/m2/",
-      "ivy" at "https://repo.lightbend.com/lightbend/ivy-releases/",
-      "orgGradle" at "https://mvnrepository.com/artifact/org.gradle/",
-      "files" at "https://repo.gradle.org/gradle/libs-releases-local/",
-      "jitpack" at "https://jitpack.io",
       Resolver.sonatypeRepo("public"),
     ),
     scalacOptions ++= Seq(
