@@ -16,7 +16,7 @@ trait Sender[K, V] {
       requestName: Expression[String],
       key: Option[Expression[K]],
       payload: Expression[V],
-      headers: Option[Expression[util.List[Header]]]
+      headers: Option[Expression[util.List[Header]]],
   ): RequestBuilder[K, V]
 
 }
@@ -27,7 +27,7 @@ object Sender extends LowPriorSender {
       schema: SchemaFor[V],
       format: RecordFormat[V],
       fromRecord: FromRecord[V],
-      headers: util.List[Header]
+      headers: util.List[Header],
   ): Sender[K, V] = new Sender[K, V] {
 
     override def send(requestName: Expression[String], payload: Expression[V]): RequestBuilder[Nothing, V] =
@@ -36,7 +36,7 @@ object Sender extends LowPriorSender {
     override def send(
         requestName: Expression[String],
         key: Option[Expression[K]],
-        payload: Expression[V]
+        payload: Expression[V],
     ): RequestBuilder[K, V] =
       new KafkaAvro4sRequestBuilder[K, V](Avro4sAttributes(requestName, key, payload, schema, format, fromRecord, None))
 
@@ -44,7 +44,7 @@ object Sender extends LowPriorSender {
         requestName: Expression[String],
         key: Option[Expression[K]],
         payload: Expression[V],
-        headers: Option[Expression[util.List[Header]]]
+        headers: Option[Expression[util.List[Header]]],
     ): RequestBuilder[K, V] =
       new KafkaAvro4sRequestBuilder[K, V](Avro4sAttributes(requestName, key, payload, schema, format, fromRecord, headers))
   }

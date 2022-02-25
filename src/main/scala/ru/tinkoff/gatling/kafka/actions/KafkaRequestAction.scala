@@ -18,7 +18,7 @@ class KafkaRequestAction[K, V](
     val coreComponents: CoreComponents,
     val kafkaProtocol: KafkaProtocol,
     val throttled: Boolean,
-    val next: Action
+    val next: Action,
 ) extends ExitableAction with NameGen {
 
   override val name: String    = genName("kafkaRequest")
@@ -32,7 +32,7 @@ class KafkaRequestAction[K, V](
         sendRequest(requestName, producer, attr, throttled, session)
 
       outcome.onFailure(errorMessage =>
-        statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage)
+        statsEngine.reportUnbuildableRequest(session.scenario, session.groups, requestName, errorMessage),
       )
 
       outcome
@@ -46,7 +46,7 @@ class KafkaRequestAction[K, V](
       producer: Producer[K, V],
       kafkaAttributes: KafkaAttributes[K, V],
       throttled: Boolean,
-      session: Session
+      session: Session,
   ): Validation[Unit] = {
 
     kafkaAttributes payload session map { payload =>
@@ -63,7 +63,7 @@ class KafkaRequestAction[K, V](
         null,
         key,
         payload,
-        headers
+        headers,
       )
 
       val requestStartDate = clock.nowMillis
@@ -82,7 +82,7 @@ class KafkaRequestAction[K, V](
             endTimestamp = requestEndDate,
             if (e == null) OK else KO,
             None,
-            if (e == null) None else Some(e.getMessage)
+            if (e == null) None else Some(e.getMessage),
           )
 
           coreComponents.throttler match {
@@ -90,7 +90,7 @@ class KafkaRequestAction[K, V](
             case _                     => next ! session
           }
 
-        }
+        },
       )
 
     }

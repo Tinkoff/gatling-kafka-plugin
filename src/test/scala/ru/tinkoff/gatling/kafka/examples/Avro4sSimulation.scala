@@ -24,8 +24,8 @@ class Avro4sSimulation extends Simulation {
         ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   ->
           "org.apache.kafka.common.serialization.StringSerializer",
         ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG ->
-          "org.apache.kafka.common.serialization.StringSerializer"
-      )
+          "org.apache.kafka.common.serialization.StringSerializer",
+      ),
     )
 
   val kafkaAclConf: KafkaProtocol = kafka
@@ -40,8 +40,8 @@ class Avro4sSimulation extends Simulation {
         "schema.registry.url"                        -> "http://schema.registry.com",
         "security.protocol"                          -> "SASL_PLAINTEXT",
         "sasl.mechanism"                             -> "SCRAM-SHA-512",
-        "sasl.jaas.config"                           -> s"""org.apache.kafka.common.security.scram.ScramLoginModule required username="MY-USER" password="SECRET-PASSWORD";"""
-      )
+        "sasl.jaas.config"                           -> s"""org.apache.kafka.common.security.scram.ScramLoginModule required username="MY-USER" password="SECRET-PASSWORD";""",
+      ),
     )
 
   case class Ingredient(name: String, sugar: Double, fat: Double)
@@ -55,17 +55,17 @@ class Avro4sSimulation extends Simulation {
     .exec(
       kafka("Simple Request")
         // message to send
-        .send[Ingredient](Ingredient("Cheese", 0d, 70d))
+        .send[Ingredient](Ingredient("Cheese", 0d, 70d)),
     )
     .exec(
       kafka("Simple Request with Key")
         // message to send
-        .send[String, Ingredient]("Key", Ingredient("Cheese", 0d, 70d))
+        .send[String, Ingredient]("Key", Ingredient("Cheese", 0d, 70d)),
     )
 
   setUp(
     scn
-      .inject(constantUsersPerSec(10) during (90 seconds))
+      .inject(constantUsersPerSec(10) during (90 seconds)),
   )
     .protocols(kafkaConf)
 }

@@ -15,7 +15,7 @@ trait LowPriorSender {
       override def send(
           requestName: Expression[String],
           key: Option[Expression[K]],
-          payload: Expression[V]
+          payload: Expression[V],
       ): RequestBuilder[K, V] =
         KafkaRequestBuilder[K, V](KafkaAttributes(requestName, key, payload, None))
 
@@ -23,7 +23,7 @@ trait LowPriorSender {
           requestName: Expression[String],
           key: Option[Expression[K]],
           payload: Expression[V],
-          headers: Option[Expression[util.List[Header]]]
+          headers: Option[Expression[util.List[Header]]],
       ): RequestBuilder[K, V] =
         KafkaRequestBuilder[K, V](KafkaAttributes(requestName, key, payload, headers))
     }
