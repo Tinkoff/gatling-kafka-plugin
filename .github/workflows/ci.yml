@@ -19,9 +19,6 @@ jobs:
         with:
           java-version: openjdk@1.17.0
 
-      - name: Setup GPG
-        uses: olafurpg/setup-gpg@v3
-
       - name: Test
         run: sbt compile test
 
