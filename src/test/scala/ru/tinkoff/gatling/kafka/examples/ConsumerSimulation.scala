@@ -13,10 +13,10 @@ class ConsumerSimulation extends Simulation {
       .topic("test.topic")
       .properties(Map(ProducerConfig.ACKS_CONFIG -> "1"))
 
-  val scn: ScenarioBuilder             = scenario("Basic")
+  val scn: ScenarioBuilder = scenario("Basic")
     .exec(
       kafka("BasicRequest")
-        .send[String]("foo")
+        .send[String]("foo"),
     )
 
 }

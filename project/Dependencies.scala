@@ -9,14 +9,16 @@ object Dependencies {
   }
 
   lazy val gatling: Seq[ModuleID] = Seq(
-    "io.gatling" % "gatling-core" % Versions.gatling % "provided",
+    "io.gatling" % "gatling-core"           % Versions.gatling % "provided",
+    "io.gatling" % "gatling-test-framework" % Versions.gatling % "provided",
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
-    ("org.apache.kafka" % "kafka-clients" % Versions.kafka)
+    ("org.apache.kafka"  % "kafka-clients"       % Versions.kafka)
+      .exclude("org.slf4j", "slf4j-api"),
+    ("org.apache.kafka" %% "kafka-streams-scala" % Versions.kafka)
       .exclude("org.slf4j", "slf4j-api"),
   )
-
 
   lazy val avro4s: ModuleID = "com.sksamuel.avro4s" %% "avro4s-core" % Versions.avro4s % "provided"
 

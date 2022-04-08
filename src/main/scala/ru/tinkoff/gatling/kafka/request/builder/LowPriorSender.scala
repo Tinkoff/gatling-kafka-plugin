@@ -1,9 +1,7 @@
 package ru.tinkoff.gatling.kafka.request.builder
 
 import io.gatling.core.session.Expression
-import org.apache.kafka.common.header.Header
-
-import java.util
+import org.apache.kafka.common.header.Headers
 
 trait LowPriorSender {
   implicit def noSchemaSender[K, V]: Sender[K, V] =
@@ -23,7 +21,7 @@ trait LowPriorSender {
           requestName: Expression[String],
           key: Option[Expression[K]],
           payload: Expression[V],
-          headers: Option[Expression[util.List[Header]]],
+          headers: Option[Expression[Headers]],
       ): RequestBuilder[K, V] =
         KafkaRequestBuilder[K, V](KafkaAttributes(requestName, key, payload, headers))
     }
