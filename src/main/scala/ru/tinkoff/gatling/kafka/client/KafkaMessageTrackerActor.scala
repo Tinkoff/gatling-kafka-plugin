@@ -104,8 +104,7 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
           KO,
           next,
           requestName,
-          None,
-//          message. responseCode,
+          message.responseCode,
           Some(errorMessage),
         )
       case _                           =>

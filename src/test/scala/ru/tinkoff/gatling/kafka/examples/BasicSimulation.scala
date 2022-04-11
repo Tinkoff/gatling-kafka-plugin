@@ -41,7 +41,8 @@ class BasicSimulation extends Simulation {
       kafka("ReqRep").requestReply
         .requestTopic("test.t")
         .replyTopic("test.t")
-        .send[String, String]("#{kekey}", "dkf", List.empty[Header].expressionSuccess),
+        .send[String, String]("#{kekey}", """{ "m": "dkf" }""", List.empty[Header].expressionSuccess)
+        .check(jsonPath("$.m").is("dkf")),
     )
 
   setUp(scn.inject(atOnceUsers(5))).protocols(kafkaProtocolC).maxDuration(120.seconds)

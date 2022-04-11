@@ -4,6 +4,7 @@ import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session.Expression
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.serialization.Serde
+import ru.tinkoff.gatling.kafka.KafkaCheck
 import ru.tinkoff.gatling.kafka.actions.KafkaRequestReplyActionBuilder
 
 import scala.reflect.ClassTag
@@ -29,8 +30,8 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
           key: Expression[K],
           payload: Expression[V],
           headers: Expression[Headers],
-      ): ActionBuilder = {
-        new KafkaRequestReplyActionBuilder[K, V](
+      ): KafkaRequestReplyActionBuilder[K, V] = {
+        KafkaRequestReplyActionBuilder[K, V](
           new KafkaRequestReplyAttributes[K, V](
             requestName,
             inTopic,
@@ -45,8 +46,11 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
         )
       }
 
-      def send[K: Serde: ClassTag, V: Serde: ClassTag](key: Expression[K], payload: Expression[V]): ActionBuilder = {
-        new KafkaRequestReplyActionBuilder[K, V](
+      def send[K: Serde: ClassTag, V: Serde: ClassTag](
+          key: Expression[K],
+          payload: Expression[V],
+      ): KafkaRequestReplyActionBuilder[K, V] =
+        KafkaRequestReplyActionBuilder[K, V](
           new KafkaRequestReplyAttributes[K, V](
             requestName,
             inTopic,
@@ -59,10 +63,8 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
             List.empty,
           ),
         )
-      }
-
     }
-    case class RRInTopicStep(inTopic: Expression[String]) {
+    case class RRInTopicStep(inTopic: Expression[String])                                {
       def replyTopic(outTopic: Expression[String]): RROutTopicStep = RROutTopicStep(inTopic, outTopic)
     }
     def requestTopic(rt: Expression[String]): RRInTopicStep = RRInTopicStep(rt)
