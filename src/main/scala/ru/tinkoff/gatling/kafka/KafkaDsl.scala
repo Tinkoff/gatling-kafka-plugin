@@ -7,10 +7,11 @@ import ru.tinkoff.gatling.kafka.protocol.{KafkaProtocol, KafkaProtocolBuilder, K
 import ru.tinkoff.gatling.kafka.request.builder.{KafkaRequestBuilderBase, RequestBuilder}
 import org.apache.kafka.common.header.{Header, Headers}
 import ru.tinkoff.gatling.kafka.checks.KafkaCheckSupport
+import ru.tinkoff.gatling.kafka.request.KafkaSerdesImplicits
 
 import scala.jdk.CollectionConverters._
 
-trait KafkaDsl extends KafkaCheckSupport {
+trait KafkaDsl extends KafkaCheckSupport with KafkaSerdesImplicits {
 
   val kafka: KafkaProtocolBuilder.type = KafkaProtocolBuilder
 

@@ -7,6 +7,8 @@ import io.gatling.core.check.xpath.XmlParsers
 import io.gatling.core.config.GatlingConfiguration
 import io.gatling.core.json.JsonParsers
 import net.sf.saxon.s9api.XdmNode
+import org.apache.avro.generic.GenericRecord
+import org.apache.kafka.common.serialization.Serde
 import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import java.io.ByteArrayInputStream
@@ -53,4 +55,8 @@ object KafkaMessagePreparer {
         messageCharset(configuration, msg).map(cs => XmlParsers.parse(new ByteArrayInputStream(msg.value), cs))
       }
 
+  def avroPreparer[T <: GenericRecord: Serde](config: GatlingConfiguration, topic: String): KafkaMessagePreparer[T] = msg =>
+    safely(ErrorMapper) {
+      messageCharset(config, msg).map(_ => implicitly[Serde[T]].deserializer().deserialize(topic, msg.value))
+    }
 }

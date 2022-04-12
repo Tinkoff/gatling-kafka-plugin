@@ -52,40 +52,40 @@ trait KafkaCheckSupport {
   )(implicit materializer: CheckMaterializer[T, KafkaCheck, KafkaProtocolMessage, P]): KafkaCheck =
     find.find.exists
 
-  implicit def amqpXPathMaterializer(implicit
+  implicit def kafkaXPathMaterializer(implicit
       configuration: GatlingConfiguration,
   ): KafkaCheckMaterializer[XPathCheckType, XdmNode] =
     KafkaCheckMaterializer.xpath(configuration)
 
-  implicit def amqpJsonPathMaterializer(implicit
+  implicit def kafkaJsonPathMaterializer(implicit
       jsonParsers: JsonParsers,
       configuration: GatlingConfiguration,
   ): KafkaCheckMaterializer[JsonPathCheckType, JsonNode] =
     KafkaCheckMaterializer.jsonPath(jsonParsers, configuration)
 
-  implicit def amqpJmesPathMaterializer(implicit
+  implicit def kafkaJmesPathMaterializer(implicit
       jsonParsers: JsonParsers,
       configuration: GatlingConfiguration,
   ): KafkaCheckMaterializer[JmesPathCheckType, JsonNode] =
     KafkaCheckMaterializer.jmesPath(jsonParsers, configuration)
 
-  implicit def amqpBodyStringMaterializer(implicit
+  implicit def kafkaBodyStringMaterializer(implicit
       configuration: GatlingConfiguration,
   ): KafkaCheckMaterializer[BodyStringCheckType, String] =
     KafkaCheckMaterializer.bodyString(configuration)
 
-  implicit def amqpSubstringMaterializer(implicit
+  implicit def kafkaSubstringMaterializer(implicit
       configuration: GatlingConfiguration,
   ): KafkaCheckMaterializer[SubstringCheckType, String] =
     KafkaCheckMaterializer.substring(configuration)
 
-  implicit def amqpBodyByteMaterializer: KafkaCheckMaterializer[BodyBytesCheckType, Array[Byte]] =
+  implicit def kafkaBodyByteMaterializer: KafkaCheckMaterializer[BodyBytesCheckType, Array[Byte]] =
     KafkaCheckMaterializer.bodyBytes
 
-  implicit val amqpStatusCheckMaterializer: KafkaCheckMaterializer[KafkaMessageCheckType, KafkaProtocolMessage] =
+  implicit val kafkaStatusCheckMaterializer: KafkaCheckMaterializer[KafkaMessageCheckType, KafkaProtocolMessage] =
     KafkaCheckMaterializer.kafkaStatusCheck
 
-  implicit val amqpUntypedConditionalCheckWrapper: UntypedCheckIfMaker[KafkaCheck] = _.checkIf(_)
+  implicit val kafkaUntypedConditionalCheckWrapper: UntypedCheckIfMaker[KafkaCheck] = _.checkIf(_)
 
-  implicit val amqpTypedConditionalCheckWrapper: TypedCheckIfMaker[KafkaProtocolMessage, KafkaCheck] = _.checkIf(_)
+  implicit val kafkaTypedConditionalCheckWrapper: TypedCheckIfMaker[KafkaProtocolMessage, KafkaCheck] = _.checkIf(_)
 }

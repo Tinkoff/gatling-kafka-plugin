@@ -12,6 +12,8 @@ import io.gatling.core.check.{CheckMaterializer, Preparer}
 import io.gatling.core.config.GatlingConfiguration
 import io.gatling.core.json.JsonParsers
 import net.sf.saxon.s9api.XdmNode
+import org.apache.avro.generic.GenericRecord
+import org.apache.kafka.common.serialization.Serde
 import ru.tinkoff.gatling.kafka.KafkaCheck
 import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
@@ -48,4 +50,10 @@ object KafkaCheckMaterializer {
 
   val kafkaStatusCheck: KafkaCheckMaterializer[KafkaMessageCheckType, KafkaProtocolMessage] =
     new KafkaCheckMaterializer(_.success)
+
+  def avroBody[T <: GenericRecord: Serde](
+      configuration: GatlingConfiguration,
+      topic: String,
+  ): KafkaCheckMaterializer[KafkaMessageCheckType, T] =
+    new KafkaCheckMaterializer(KafkaMessagePreparer.avroPreparer[T](configuration, topic))
 }

@@ -6,7 +6,6 @@ import io.gatling.core.session._
 import io.gatling.core.structure.ScenarioBuilder
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.header.Header
-import org.apache.kafka.streams.scala.serialization.Serdes._
 import ru.tinkoff.gatling.kafka.Predef._
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 
