@@ -27,24 +27,25 @@ class TrackersPool(
   props.putAll(streamsSettings.asJava)
 
   def tracker(
-      sourceTopic: String,
+      inputTopic: String,
+      outputTopic: String,
       responseTransformer: Option[KafkaProtocolMessage => KafkaProtocolMessage],
   ): KafkaMessageTracker =
     trackers.computeIfAbsent(
-      sourceTopic,
+      outputTopic,
       _ => {
         val actor =
           system.actorOf(KafkaMessageTrackerActor.props(statsEngine, clock), genName("kafkaTrackerActor"))
 
         val builder = new StreamsBuilder
 
-        builder.stream[Array[Byte], Array[Byte]](sourceTopic).foreach { case (k, v) =>
+        builder.stream[Array[Byte], Array[Byte]](outputTopic).foreach { case (k, v) =>
           if (k == null) {
             logger.error(s"no key for message ${new String(v)}")
           } else {
             logger.info(s" --- received ${new String(k)} ${new String(v)}")
             val receivedTimestamp = clock.nowMillis
-            val message           = KafkaProtocolMessage(k, v)
+            val message           = KafkaProtocolMessage(k, v, inputTopic, outputTopic)
             logMessage(
               s"Record received key=${new String(k)}",
               message,

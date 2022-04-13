@@ -1,8 +1,9 @@
 package ru.tinkoff.gatling.kafka.protocol
 
 import org.apache.kafka.clients.producer.ProducerConfig
-import org.apache.kafka.streams.StreamsConfig
 import org.apache.kafka.common.serialization.Serdes
+import org.apache.kafka.streams.StreamsConfig
+
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
 object KafkaProtocolBuilderNew {
@@ -34,7 +35,6 @@ case class KafkaProtocolBuilderNew(
       StreamsConfig.APPLICATION_ID_CONFIG            -> s"gatling-test-${java.util.UUID.randomUUID()}",
       StreamsConfig.DEFAULT_KEY_SERDE_CLASS_CONFIG   -> Serdes.ByteArray().getClass.getName,
       StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG -> Serdes.ByteArray().getClass.getName,
-      "enable.auto.commit"                           -> "true",
     )
 
     KafkaProtocol("test", producerSettings ++ serializers, consumeSettings ++ consumeDefaults, timeout)

@@ -8,7 +8,7 @@ import scala.jdk.CollectionConverters._
 import scala.util.{Failure, Success}
 
 trait KafkaSender {
-  def send(topic: String, protocolMessage: KafkaProtocolMessage)(
+  def send(protocolMessage: KafkaProtocolMessage)(
       onSuccess: RecordMetadata => Unit,
       onFailure: Throwable => Unit,
   ): Unit
@@ -18,10 +18,9 @@ trait KafkaSender {
 object KafkaSender {
   private final class Impl(producer: Producer[Array[Byte], Array[Byte]])(implicit ec: ExecutionContext) extends KafkaSender {
     override def send(
-        topic: String,
         protocolMessage: KafkaProtocolMessage,
     )(onSuccess: RecordMetadata => Unit, onFailure: Throwable => Unit): Unit = {
-      Future(producer.send(protocolMessage.toProducerRecord(topic)).get()).onComplete {
+      Future(producer.send(protocolMessage.toProducerRecord).get()).onComplete {
         case Success(value)     => onSuccess(value)
         case Failure(exception) => onFailure(exception)
       }

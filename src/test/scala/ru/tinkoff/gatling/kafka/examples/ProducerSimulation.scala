@@ -6,7 +6,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import ru.tinkoff.gatling.kafka.Predef._
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 
-class ConsumerSimulation extends Simulation {
+class ProducerSimulation extends Simulation {
 
   val kafkaConsumerConf: KafkaProtocol =
     kafka

@@ -7,8 +7,8 @@ import ru.tinkoff.gatling.kafka.KafkaCheck
 
 case class KafkaRequestReplyAttributes[K, V](
     requestName: Expression[String],
-    inTopic: Expression[String],
-    outTopic: Expression[String],
+    inputTopic: Expression[String],
+    outputTopic: Expression[String],
     key: Expression[K],
     value: Expression[V],
     headers: Option[Expression[Headers]],

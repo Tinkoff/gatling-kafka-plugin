@@ -1,9 +1,9 @@
 package ru.tinkoff.gatling.kafka.request
 
+import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.common.serialization.{Serde, Serdes => JSerdes}
 import org.apache.kafka.streams.kstream.WindowedSerdes
-import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
 
 import java.nio.ByteBuffer
 import java.util.UUID

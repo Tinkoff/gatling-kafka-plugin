@@ -1,27 +1,32 @@
 package ru.tinkoff.gatling.kafka.checks
 
 import com.fasterxml.jackson.databind.JsonNode
+import io.gatling.commons.validation._
 import io.gatling.core.check.Check.PreparedCache
-import io.gatling.core.check.{Check, CheckBuilder, CheckMaterializer, CheckResult, TypedCheckIfMaker, UntypedCheckIfMaker}
 import io.gatling.core.check.bytes.BodyBytesCheckType
 import io.gatling.core.check.jmespath.JmesPathCheckType
 import io.gatling.core.check.jsonpath.JsonPathCheckType
 import io.gatling.core.check.string.BodyStringCheckType
 import io.gatling.core.check.substring.SubstringCheckType
 import io.gatling.core.check.xpath.XPathCheckType
+import io.gatling.core.check.{Check, CheckBuilder, CheckMaterializer, CheckResult, TypedCheckIfMaker, UntypedCheckIfMaker}
 import io.gatling.core.config.GatlingConfiguration
 import io.gatling.core.json.JsonParsers
 import io.gatling.core.session.Session
 import net.sf.saxon.s9api.XdmNode
+import org.apache.avro.generic.GenericRecord
+import org.apache.kafka.common.serialization.Serde
 import ru.tinkoff.gatling.kafka.KafkaCheck
-import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
-import io.gatling.commons.validation._
 import ru.tinkoff.gatling.kafka.checks.KafkaCheckMaterializer.KafkaMessageCheckType
+import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import scala.annotation.implicitNotFound
 
 trait KafkaCheckSupport {
   def messageCheck: KafkaMessageCheck.type = KafkaMessageCheck
+
+  def avroBody[T <: GenericRecord: Serde]: CheckBuilder.Find[KafkaMessageCheckType, KafkaProtocolMessage, T] =
+    AvroBodyCheckBuilder._avroBody
 
   def simpleCheck(f: KafkaProtocolMessage => Boolean): KafkaCheck =
     Check.Simple(

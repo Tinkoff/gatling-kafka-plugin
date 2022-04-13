@@ -3,11 +3,11 @@ package ru.tinkoff.gatling.kafka
 import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session.Expression
 import org.apache.kafka.common.header.internals.RecordHeaders
-import ru.tinkoff.gatling.kafka.protocol.{KafkaProtocol, KafkaProtocolBuilder, KafkaProtocolBuilderNew}
-import ru.tinkoff.gatling.kafka.request.builder.{KafkaRequestBuilderBase, RequestBuilder}
 import org.apache.kafka.common.header.{Header, Headers}
 import ru.tinkoff.gatling.kafka.checks.KafkaCheckSupport
+import ru.tinkoff.gatling.kafka.protocol.{KafkaProtocol, KafkaProtocolBuilder, KafkaProtocolBuilderNew}
 import ru.tinkoff.gatling.kafka.request.KafkaSerdesImplicits
+import ru.tinkoff.gatling.kafka.request.builder.{KafkaRequestBuilderBase, RequestBuilder}
 
 import scala.jdk.CollectionConverters._
 

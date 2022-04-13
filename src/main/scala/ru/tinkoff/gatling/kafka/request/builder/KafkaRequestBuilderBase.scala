@@ -1,10 +1,8 @@
 package ru.tinkoff.gatling.kafka.request.builder
 
-import io.gatling.core.action.builder.ActionBuilder
 import io.gatling.core.session.Expression
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.serialization.Serde
-import ru.tinkoff.gatling.kafka.KafkaCheck
 import ru.tinkoff.gatling.kafka.actions.KafkaRequestReplyActionBuilder
 
 import scala.reflect.ClassTag
@@ -25,7 +23,7 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
   def requestReply: ReqRepBase.type = ReqRepBase
 
   object ReqRepBase {
-    case class RROutTopicStep(inTopic: Expression[String], outTopic: Expression[String]) {
+    case class RROutTopicStep(inputTopic: Expression[String], outputTopic: Expression[String]) {
       def send[K: Serde: ClassTag, V: Serde: ClassTag](
           key: Expression[K],
           payload: Expression[V],
@@ -34,8 +32,8 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
         KafkaRequestReplyActionBuilder[K, V](
           new KafkaRequestReplyAttributes[K, V](
             requestName,
-            inTopic,
-            outTopic,
+            inputTopic,
+            outputTopic,
             key,
             payload,
             Some(headers),
@@ -53,8 +51,8 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
         KafkaRequestReplyActionBuilder[K, V](
           new KafkaRequestReplyAttributes[K, V](
             requestName,
-            inTopic,
-            outTopic,
+            inputTopic,
+            outputTopic,
             key,
             payload,
             None,
@@ -64,8 +62,8 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
           ),
         )
     }
-    case class RRInTopicStep(inTopic: Expression[String])                                {
-      def replyTopic(outTopic: Expression[String]): RROutTopicStep = RROutTopicStep(inTopic, outTopic)
+    case class RRInTopicStep(inputTopic: Expression[String])                                   {
+      def replyTopic(outputTopic: Expression[String]): RROutTopicStep = RROutTopicStep(inputTopic, outputTopic)
     }
     def requestTopic(rt: Expression[String]): RRInTopicStep = RRInTopicStep(rt)
 
