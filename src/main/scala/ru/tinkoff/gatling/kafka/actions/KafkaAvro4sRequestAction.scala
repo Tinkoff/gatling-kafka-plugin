@@ -55,7 +55,7 @@ class KafkaAvro4sRequestAction[K, V](
         .getOrElse(null.asInstanceOf[K])
 
       val record: ProducerRecord[K, GenericRecord] =
-        new ProducerRecord(kafkaProtocol.topic, null, key, attr.format.to(payload), headers)
+        new ProducerRecord(kafkaProtocol.producerTopic, null, key, attr.format.to(payload), headers)
 
       val requestStartDate = clock.nowMillis
 

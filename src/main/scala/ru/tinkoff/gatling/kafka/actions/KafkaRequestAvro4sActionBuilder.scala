@@ -6,7 +6,7 @@ import io.gatling.core.structure.ScenarioContext
 import io.gatling.core.util.NameGen
 import org.apache.avro.generic.GenericRecord
 import org.apache.kafka.clients.producer.KafkaProducer
-import ru.tinkoff.gatling.kafka.protocol.{KafkaComponents, KafkaProtocol}
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 import ru.tinkoff.gatling.kafka.request.builder.Avro4sAttributes
 
 import scala.jdk.CollectionConverters._
@@ -15,9 +15,9 @@ class KafkaRequestAvro4sActionBuilder[K, V](attr: Avro4sAttributes[K, V]) extend
   override def build(ctx: ScenarioContext, next: Action): Action = {
     import ctx._
 
-    val kafkaComponents: KafkaComponents = protocolComponentsRegistry.components(KafkaProtocol.kafkaProtocolKey)
+    val kafkaComponents: KafkaProtocol.Components = protocolComponentsRegistry.components(KafkaProtocol.kafkaProtocolKey)
 
-    val producer = new KafkaProducer[K, GenericRecord](kafkaComponents.kafkaProtocol.properties.asJava)
+    val producer = new KafkaProducer[K, GenericRecord](kafkaComponents.kafkaProtocol.producerProperties.asJava)
 
     coreComponents.actorSystem.registerOnTermination(producer.close())
 

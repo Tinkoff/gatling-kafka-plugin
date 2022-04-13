@@ -48,3 +48,5 @@ project/plugins/project/
 *.log
 
 /.idea/
+/.bsp/
+.DS_Store
