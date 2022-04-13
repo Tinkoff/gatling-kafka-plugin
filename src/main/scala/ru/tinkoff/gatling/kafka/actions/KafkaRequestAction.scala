@@ -59,7 +59,7 @@ class KafkaRequestAction[K, V](
         .orNull
 
       val record = new ProducerRecord[K, V](
-        kafkaProtocol.topic,
+        kafkaProtocol.producerTopic,
         null,
         key,
         payload,

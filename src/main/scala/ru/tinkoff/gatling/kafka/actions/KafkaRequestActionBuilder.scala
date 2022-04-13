@@ -18,7 +18,7 @@ class KafkaRequestActionBuilder[K, V](attr: KafkaAttributes[K, V]) extends Actio
     val kafkaComponents =
       protocolComponentsRegistry.components(KafkaProtocol.kafkaProtocolKey)
 
-    val producer = new KafkaProducer[K, V](kafkaComponents.kafkaProtocol.properties.asJava)
+    val producer = new KafkaProducer[K, V](kafkaComponents.kafkaProtocol.producerProperties.asJava)
 
     coreComponents.actorSystem.registerOnTermination(producer.close())
 
