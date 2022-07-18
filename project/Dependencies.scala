@@ -4,7 +4,7 @@ object Dependencies {
   private object Versions {
     val kafka   = "3.2.0"
     val gatling = "3.7.6"
-    val avro4s  = "4.0.12"
+    val avro4s  = "4.0.13"
     val avro    = "1.11.0"
   }
 
@@ -25,6 +25,6 @@ object Dependencies {
   lazy val avroCompiler: ModuleID = "org.apache.avro" % "avro-compiler" % Versions.avro
   lazy val avroCore: ModuleID     = "org.apache.avro" % "avro"          % Versions.avro
   lazy val avroSerdes: ModuleID   =
-    ("io.confluent" % "kafka-streams-avro-serde" % "7.1.0").exclude("org.apache.kafka", "kafka-streams-scala")
+    ("io.confluent" % "kafka-streams-avro-serde" % "7.2.0").exclude("org.apache.kafka", "kafka-streams-scala")
 
 }
