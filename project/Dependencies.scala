@@ -5,7 +5,7 @@ object Dependencies {
     val kafka   = "7.2.1-ce"
     val gatling = "3.7.6"
     val avro4s  = "4.1.0"
-    val avro    = "1.11.0"
+    val avro    = "1.11.1"
   }
 
   lazy val gatling: Seq[ModuleID] = Seq(
