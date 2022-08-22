@@ -1,7 +1,7 @@
 package ru.tinkoff.gatling.kafka
 
 import io.gatling.core.action.builder.ActionBuilder
-import io.gatling.core.session.Expression
+import io.gatling.core.session._
 import org.apache.kafka.common.header.internals.RecordHeaders
 import org.apache.kafka.common.header.{Header, Headers}
 import ru.tinkoff.gatling.kafka.checks.KafkaCheckSupport
@@ -27,5 +27,7 @@ trait KafkaDsl extends KafkaCheckSupport with KafkaSerdesImplicits {
   implicit def kafkaRequestBuilder2ActionBuilder[K, V](builder: RequestBuilder[K, V]): ActionBuilder = builder.build
 
   implicit def listHeaderToHeaders(lh: Expression[List[Header]]): Expression[Headers] = lh.map(l => new RecordHeaders(l.asJava))
+
+  implicit def listHeaderToExpression(lh: List[Header]): Expression[Headers] = listHeaderToHeaders(lh.expressionSuccess)
 
 }
