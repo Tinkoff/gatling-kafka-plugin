@@ -18,5 +18,6 @@ class ProducerSimulation extends Simulation {
       kafka("BasicRequest")
         .send[String]("foo"),
     )
+    .exec(kafka("dld").send[String, Double]("true", 12.0))
 
 }
