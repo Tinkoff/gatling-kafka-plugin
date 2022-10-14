@@ -3,6 +3,7 @@ package ru.tinkoff.gatling.kafka.protocol
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol._
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -17,13 +18,25 @@ object KafkaProtocolBuilderNew {
     def timeout(t: FiniteDuration): KafkaProtocolBuilderNew = KafkaProtocolBuilderNew(producerSettings, consumeSettings, t)
     def withDefaultTimeout: KafkaProtocolBuilderNew         = KafkaProtocolBuilderNew(producerSettings, consumeSettings, 60.seconds)
   }
+
 }
 
 case class KafkaProtocolBuilderNew(
     producerSettings: Map[String, AnyRef],
     consumeSettings: Map[String, AnyRef],
     timeout: FiniteDuration,
+    messageMatcher: KafkaMatcher = KafkaKeyMatcher,
 ) extends {
+
+  def matchByMessage: KafkaProtocolBuilderNew =
+    messageMatcher(KafkaMessageMatcher)
+
+  def matchByCustomMessage(customMessage: Array[Byte]): KafkaProtocolBuilderNew =
+    messageMatcher(KafkaCustomMessageMatcher(customMessage))
+
+  private def messageMatcher(matcher: KafkaMatcher) =
+    copy(messageMatcher = matcher)
+
   def build: KafkaProtocol = {
 
     val serializers = Map(
@@ -37,6 +50,6 @@ case class KafkaProtocolBuilderNew(
       StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG -> Serdes.ByteArray().getClass.getName,
     )
 
-    KafkaProtocol("test", producerSettings ++ serializers, consumeSettings ++ consumeDefaults, timeout)
+    KafkaProtocol("test", producerSettings ++ serializers, consumeSettings ++ consumeDefaults, timeout, messageMatcher)
   }
 }

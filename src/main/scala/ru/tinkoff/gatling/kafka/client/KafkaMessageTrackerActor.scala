@@ -31,6 +31,7 @@ object KafkaMessageTrackerActor {
   )
 
   case class MessageConsumed(
+      replyId: Array[Byte],
       received: Long,
       message: KafkaProtocolMessage,
   )
@@ -118,7 +119,7 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
       timedOutMessages: mutable.ArrayBuffer[MessagePublished],
   ): Receive = {
     // message was sent; add the timestamps to the map
-    case messageSent: MessagePublished      =>
+    case messageSent: MessagePublished               =>
       val key = KafkaMessageTrackerActor.makeKeyForSentMessages(messageSent.key)
       sentMessages += key -> messageSent
       if (messageSent.replyTimeout > 0) {
@@ -126,9 +127,9 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
       }
 
     // message was received; publish stats and remove from the map
-    case MessageConsumed(received, message) =>
+    case MessageConsumed(replyId, received, message) =>
       // if key is missing, message was already acked and is a dup, or request timeout
-      val key = KafkaMessageTrackerActor.makeKeyForSentMessages(message.key)
+      val key = makeKeyForSentMessages(replyId)
       sentMessages.remove(key).foreach { case MessagePublished(_, sent, _, checks, session, next, requestName) =>
         processMessage(session, sent, received, checks, message, next, requestName)
       }

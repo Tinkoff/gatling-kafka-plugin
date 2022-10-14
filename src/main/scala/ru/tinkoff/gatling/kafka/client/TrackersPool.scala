@@ -10,6 +10,7 @@ import org.apache.kafka.streams.scala.StreamsBuilder
 import org.apache.kafka.streams.scala.serialization.Serdes._
 import ru.tinkoff.gatling.kafka.KafkaLogging
 import ru.tinkoff.gatling.kafka.client.KafkaMessageTrackerActor.MessageConsumed
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol.KafkaMatcher
 import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import java.util.concurrent.ConcurrentHashMap
@@ -29,6 +30,7 @@ class TrackersPool(
   def tracker(
       inputTopic: String,
       outputTopic: String,
+      messageMatcher: KafkaMatcher,
       responseTransformer: Option[KafkaProtocolMessage => KafkaProtocolMessage],
   ): KafkaMessageTracker =
     trackers.computeIfAbsent(
@@ -46,12 +48,14 @@ class TrackersPool(
             logger.info(s" --- received ${new String(k)} ${new String(v)}")
             val receivedTimestamp = clock.nowMillis
             val message           = KafkaProtocolMessage(k, v, inputTopic, outputTopic)
+            val replyId           = messageMatcher.responseMatch(message)
             logMessage(
               s"Record received key=${new String(k)}",
               message,
             )
 
             actor ! MessageConsumed(
+              replyId,
               receivedTimestamp,
               responseTransformer.map(_(message)).getOrElse(message),
             )

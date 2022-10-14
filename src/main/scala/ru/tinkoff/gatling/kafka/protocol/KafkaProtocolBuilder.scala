@@ -13,6 +13,6 @@ case object KafkaProtocolBuilder {
 
 case class KafkaProtocolBuilder(topic: String, props: Map[String, Object]) {
 
-  def build = new KafkaProtocol(topic, props, props, 60.seconds)
+  def build = new KafkaProtocol(topic, props, props, 60.seconds, null)
 
 }

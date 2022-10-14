@@ -4,12 +4,34 @@ import io.gatling.core.CoreComponents
 import io.gatling.core.config.GatlingConfiguration
 import io.gatling.core.protocol.{Protocol, ProtocolKey}
 import ru.tinkoff.gatling.kafka.client.{KafkaSender, TrackersPool}
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol.KafkaMatcher
+import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import java.util.concurrent.Executors
 import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService}
 
 object KafkaProtocol {
+
+  trait KafkaMatcher {
+    def requestMatch(msg: KafkaProtocolMessage): Array[Byte]  = msg.key
+    def responseMatch(msg: KafkaProtocolMessage): Array[Byte] = msg.key
+  }
+
+  object KafkaKeyMatcher extends KafkaMatcher {
+    override def requestMatch(msg: KafkaProtocolMessage): Array[Byte]  = msg.key
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte] = msg.key
+  }
+
+  object KafkaMessageMatcher extends KafkaMatcher {
+    override def requestMatch(msg: KafkaProtocolMessage): Array[Byte]  = msg.value
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte] = msg.value
+  }
+
+  case class KafkaCustomMessageMatcher(customMessage: Array[Byte]) extends KafkaMatcher {
+    override def requestMatch(msg: KafkaProtocolMessage): Array[Byte]  = customMessage
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte] = msg.value
+  }
 
   type Components = KafkaComponents
 
@@ -43,6 +65,7 @@ case class KafkaProtocol(
     producerProperties: Map[String, AnyRef],
     consumeProperties: Map[String, AnyRef],
     timeout: FiniteDuration,
+    messageMatcher: KafkaMatcher,
 ) extends Protocol {
 
   def topic(t: String): KafkaProtocol = copy(producerTopic = t)
