@@ -1,5 +1,6 @@
 package ru.tinkoff.gatling.kafka.protocol
 
+import io.gatling.core.session.Expression
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -31,10 +32,13 @@ case class KafkaProtocolBuilderNew(
   def matchByMessage: KafkaProtocolBuilderNew =
     messageMatcher(KafkaMessageMatcher)
 
-  def matchByCustomMessage(customMessage: Array[Byte]): KafkaProtocolBuilderNew =
+  def matchByCustomMessage(customMessage: Expression[Any]): KafkaProtocolBuilderNew =
     messageMatcher(KafkaCustomMessageMatcher(customMessage))
 
-  private def messageMatcher(matcher: KafkaMatcher) =
+  def matchByCustomKey(customKey: Expression[Any]): KafkaProtocolBuilderNew =
+    messageMatcher(KafkaCustomKeyMatcher(customKey))
+
+  private def messageMatcher(matcher: KafkaMatcher): KafkaProtocolBuilderNew =
     copy(messageMatcher = matcher)
 
   def build: KafkaProtocol = {

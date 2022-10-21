@@ -4,10 +4,10 @@ import akka.actor.{Actor, Props, Timers}
 import com.typesafe.scalalogging.LazyLogging
 import io.gatling.commons.stats.{KO, OK, Status}
 import io.gatling.commons.util.Clock
-import io.gatling.commons.validation.Failure
+import io.gatling.commons.validation.{Failure, Success}
 import io.gatling.core.action.Action
 import io.gatling.core.check.Check
-import io.gatling.core.session.Session
+import io.gatling.core.session.{Expression, Session}
 import io.gatling.core.stats.StatsEngine
 import ru.tinkoff.gatling.kafka.KafkaCheck
 import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
@@ -31,15 +31,23 @@ object KafkaMessageTrackerActor {
   )
 
   case class MessageConsumed(
-      replyId: Array[Byte],
+      replyId: Expression[Any],
       received: Long,
       message: KafkaProtocolMessage,
+      session: Session,
   )
 
   case object TimeoutScan
 
   private def makeKeyForSentMessages(m: Array[Byte]): String =
     Option(m).map(java.util.Base64.getEncoder.encodeToString).getOrElse("")
+
+  private def makeKeyForExpression(expr: Expression[Any], session: Session): Array[Byte] = {
+    expr(session) match {
+      case Success(s)       => s.toString.getBytes
+      case Failure(message) => throw new IllegalStateException(message)
+    }
+  }
 }
 
 class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends Actor with Timers with LazyLogging {
@@ -119,17 +127,17 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
       timedOutMessages: mutable.ArrayBuffer[MessagePublished],
   ): Receive = {
     // message was sent; add the timestamps to the map
-    case messageSent: MessagePublished               =>
-      val key = KafkaMessageTrackerActor.makeKeyForSentMessages(messageSent.key)
+    case messageSent: MessagePublished                        =>
+      val key = makeKeyForSentMessages(messageSent.key)
       sentMessages += key -> messageSent
       if (messageSent.replyTimeout > 0) {
         triggerPeriodicTimeoutScan(periodicTimeoutScanTriggered, sentMessages, timedOutMessages)
       }
 
     // message was received; publish stats and remove from the map
-    case MessageConsumed(replyId, received, message) =>
+    case MessageConsumed(replyId, received, message, session) =>
       // if key is missing, message was already acked and is a dup, or request timeout
-      val key = makeKeyForSentMessages(replyId)
+      val key = makeKeyForSentMessages(makeKeyForExpression(replyId, session))
       sentMessages.remove(key).foreach { case MessagePublished(_, sent, _, checks, session, next, requestName) =>
         processMessage(session, sent, received, checks, message, next, requestName)
       }
@@ -142,9 +150,8 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
           timedOutMessages += messagePublished
         }
       }
-
       for (MessagePublished(matchId, sent, receivedTimeout, _, session, next, requestName) <- timedOutMessages) {
-        sentMessages.remove(KafkaMessageTrackerActor.makeKeyForSentMessages(matchId))
+        sentMessages.remove(makeKeyForSentMessages(matchId))
         executeNext(
           session.markAsFailed,
           sent,
