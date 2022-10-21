@@ -39,7 +39,7 @@ class MatchSimulation extends Simulation {
       ),
     )
     .timeout(5.seconds)
-    .matchByCustomMessage("CustomMessage".getBytes)
+    .matchByCustomMessage("CustomMessage_#{kekey}")
 
   val c                   = new AtomicInteger(0)
   val feeder: Feeder[Int] = Iterator.continually(Map("kekey" -> c.incrementAndGet()))
