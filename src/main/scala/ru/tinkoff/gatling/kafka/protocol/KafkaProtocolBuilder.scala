@@ -1,5 +1,7 @@
 package ru.tinkoff.gatling.kafka.protocol
 
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol.KafkaKeyMatcher
+
 import scala.concurrent.duration.DurationInt
 
 case object KafkaProtocolBuilder {
@@ -13,6 +15,6 @@ case object KafkaProtocolBuilder {
 
 case class KafkaProtocolBuilder(topic: String, props: Map[String, Object]) {
 
-  def build = new KafkaProtocol(topic, props, props, 60.seconds, null)
+  def build = new KafkaProtocol(topic, props, props, 60.seconds, KafkaKeyMatcher)
 
 }

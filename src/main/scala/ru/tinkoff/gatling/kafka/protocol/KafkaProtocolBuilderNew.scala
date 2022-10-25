@@ -19,7 +19,6 @@ object KafkaProtocolBuilderNew {
     def timeout(t: FiniteDuration): KafkaProtocolBuilderNew = KafkaProtocolBuilderNew(producerSettings, consumeSettings, t)
     def withDefaultTimeout: KafkaProtocolBuilderNew         = KafkaProtocolBuilderNew(producerSettings, consumeSettings, 60.seconds)
   }
-
 }
 
 case class KafkaProtocolBuilderNew(

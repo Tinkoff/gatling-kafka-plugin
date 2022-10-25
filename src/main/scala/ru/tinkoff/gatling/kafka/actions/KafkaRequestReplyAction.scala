@@ -80,7 +80,7 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
         headers     <- optToVal(attributes.headers.map(_(s)))
       } yield KafkaProtocolMessage(key, value, inputTopic, outputTopic, headers)
 
-  private def resolveToKey(msg: KafkaProtocolMessage, s: Session): Array[Byte] = {
+  private def makeKeyForMatching(msg: KafkaProtocolMessage, s: Session): Array[Byte] = {
     val classTagSer = if (components.kafkaProtocol.messageMatcher.isKeyMatch) classTag[K] else classTag[V]
     val serializer  =
       if (components.kafkaProtocol.messageMatcher.isKeyMatch) attributes.keySerializer else attributes.valueSerializer
@@ -123,7 +123,7 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
         if (logger.underlying.isDebugEnabled) {
           logMessage(s"Record sent user=${session.userId} key=${new String(msg.key)} topic=${rm.topic()}", msg)
         }
-        val id = resolveToKey(msg, session)
+        val id = makeKeyForMatching(msg, session)
         components.trackersPool
           .tracker(msg.inputTopic, msg.outputTopic, components.kafkaProtocol.messageMatcher, None, session)
           .track(
