@@ -14,33 +14,39 @@ import scala.concurrent.duration.FiniteDuration
 import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService}
 
 object KafkaProtocol {
-
+  /*
+  Matcher description
+  def isKeyMatch - boolean val for correct key/value serialization in KafkaRequestReplyAction
+  !Impractical! isKeyMatch need to replace, or change
+  def requestMatch - expression, that will be converted to array[byte] and than used as messageSent hashmap key
+  def responseMatch - value, that will be used in received message in messageSent hashmap comparison
+   */
   trait KafkaMatcher {
-    def isKeyMatch: Boolean                                       = true
-    def requestMatch(msg: KafkaProtocolMessage): Expression[Any]  = new String(msg.key).el[String]
-    def responseMatch(msg: KafkaProtocolMessage): Expression[Any] = new String(msg.key).el[String]
+    def isKeyMatch: Boolean                                      = true
+    def requestMatch(msg: KafkaProtocolMessage): Expression[Any] = new String(msg.key).el[String]
+    def responseMatch(msg: KafkaProtocolMessage): Array[Byte]    = msg.key
   }
 
   object KafkaKeyMatcher extends KafkaMatcher {
-    override def requestMatch(msg: KafkaProtocolMessage): Expression[String]  = new String(msg.key).el[String]
-    override def responseMatch(msg: KafkaProtocolMessage): Expression[String] = new String(msg.key).el[String]
+    override def requestMatch(msg: KafkaProtocolMessage): Expression[String] = new String(msg.key).el[String]
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte]       = msg.key
   }
 
   object KafkaMessageMatcher extends KafkaMatcher {
-    override def isKeyMatch: Boolean                                          = false
-    override def requestMatch(msg: KafkaProtocolMessage): Expression[String]  = new String(msg.value).el[String]
-    override def responseMatch(msg: KafkaProtocolMessage): Expression[String] = new String(msg.value).el[String]
+    override def isKeyMatch: Boolean                                         = false
+    override def requestMatch(msg: KafkaProtocolMessage): Expression[String] = new String(msg.value).el[String]
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte]       = msg.value
   }
 
   case class KafkaCustomMessageMatcher(customMessage: Expression[Any]) extends KafkaMatcher {
-    override def isKeyMatch: Boolean                                       = false
-    override def requestMatch(msg: KafkaProtocolMessage): Expression[Any]  = customMessage
-    override def responseMatch(msg: KafkaProtocolMessage): Expression[Any] = new String(msg.value).el[String]
+    override def isKeyMatch: Boolean                                      = false
+    override def requestMatch(msg: KafkaProtocolMessage): Expression[Any] = customMessage
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte]    = msg.value
   }
 
   case class KafkaCustomKeyMatcher(customKey: Expression[Any]) extends KafkaMatcher {
-    override def requestMatch(msg: KafkaProtocolMessage): Expression[Any]  = customKey
-    override def responseMatch(msg: KafkaProtocolMessage): Expression[Any] = new String(msg.key).el[String]
+    override def requestMatch(msg: KafkaProtocolMessage): Expression[Any] = customKey
+    override def responseMatch(msg: KafkaProtocolMessage): Array[Byte]    = msg.key
   }
 
   type Components = KafkaComponents

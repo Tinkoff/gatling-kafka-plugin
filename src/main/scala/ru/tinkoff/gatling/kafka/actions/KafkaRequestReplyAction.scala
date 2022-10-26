@@ -125,7 +125,7 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
         }
         val id = makeKeyForMatching(msg, session)
         components.trackersPool
-          .tracker(msg.inputTopic, msg.outputTopic, components.kafkaProtocol.messageMatcher, None, session)
+          .tracker(msg.inputTopic, msg.outputTopic, components.kafkaProtocol.messageMatcher, None)
           .track(
             id,
             clock.nowMillis,

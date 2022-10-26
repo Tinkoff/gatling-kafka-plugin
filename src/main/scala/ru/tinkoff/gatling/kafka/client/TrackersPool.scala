@@ -2,7 +2,6 @@ package ru.tinkoff.gatling.kafka.client
 
 import akka.actor.{ActorSystem, CoordinatedShutdown}
 import io.gatling.commons.util.Clock
-import io.gatling.core.session.Session
 import io.gatling.core.stats.StatsEngine
 import io.gatling.core.util.NameGen
 import org.apache.kafka.streams.KafkaStreams
@@ -33,7 +32,6 @@ class TrackersPool(
       outputTopic: String,
       messageMatcher: KafkaMatcher,
       responseTransformer: Option[KafkaProtocolMessage => KafkaProtocolMessage],
-      session: Session,
   ): KafkaMessageTracker =
     trackers.computeIfAbsent(
       outputTopic,
@@ -60,7 +58,6 @@ class TrackersPool(
               replyId,
               receivedTimestamp,
               responseTransformer.map(_(message)).getOrElse(message),
-              session,
             )
           }
         }
