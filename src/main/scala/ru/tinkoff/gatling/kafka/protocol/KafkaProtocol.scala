@@ -14,8 +14,8 @@ import scala.concurrent.{ExecutionContext, ExecutionContextExecutorService}
 object KafkaProtocol {
 
   trait KafkaMatcher {
-    def requestMatch(msg: KafkaProtocolMessage): Array[Byte]  = msg.key
-    def responseMatch(msg: KafkaProtocolMessage): Array[Byte] = msg.key
+    def requestMatch(msg: KafkaProtocolMessage): Array[Byte]
+    def responseMatch(msg: KafkaProtocolMessage): Array[Byte]
   }
 
   object KafkaKeyMatcher extends KafkaMatcher {
