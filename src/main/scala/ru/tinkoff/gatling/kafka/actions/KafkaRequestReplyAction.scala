@@ -80,42 +80,6 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
         headers     <- optToVal(attributes.headers.map(_(s)))
       } yield KafkaProtocolMessage(key, value, inputTopic, outputTopic, headers)
 
-  private def makeKeyForMatching(msg: KafkaProtocolMessage, s: Session): Array[Byte] = {
-    val classTagSer = if (components.kafkaProtocol.messageMatcher.isKeyMatch) classTag[K] else classTag[V]
-    val serializer  =
-      if (components.kafkaProtocol.messageMatcher.isKeyMatch) attributes.keySerializer else attributes.valueSerializer
-    val key         = if (classTagSer.runtimeClass.getCanonicalName == "java.lang.String") {
-      for {
-        outputTopic <- attributes.outputTopic(s)
-        value       <- components.kafkaProtocol.messageMatcher
-                         .requestMatch(msg)
-                         .asInstanceOf[Expression[String]](s)
-                         .flatMap(_.el[String].apply(s))
-                         .map(v => serializer.asInstanceOf[Serializer[String]].serialize(outputTopic, v))
-      } yield value
-    } else {
-      for {
-        outputTopic <- attributes.outputTopic(s)
-        value       <-
-          if (components.kafkaProtocol.messageMatcher.isKeyMatch) {
-            components.kafkaProtocol.messageMatcher
-              .requestMatch(msg)
-              .asInstanceOf[Expression[K]](s)
-              .map(v => attributes.keySerializer.serialize(outputTopic, v))
-          } else {
-            components.kafkaProtocol.messageMatcher
-              .requestMatch(msg)
-              .asInstanceOf[Expression[V]](s)
-              .map(v => attributes.valueSerializer.serialize(outputTopic, v))
-          }
-      } yield value
-    }
-    key match {
-      case Success(value)   => value
-      case Failure(message) => throw new IllegalStateException(message)
-    }
-  }
-
   private def publishAndLogMessage(requestNameString: String, msg: KafkaProtocolMessage, session: Session): Unit = {
     val now = clock.nowMillis
     components.sender.send(msg)(
@@ -123,7 +87,7 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
         if (logger.underlying.isDebugEnabled) {
           logMessage(s"Record sent user=${session.userId} key=${new String(msg.key)} topic=${rm.topic()}", msg)
         }
-        val id = makeKeyForMatching(msg, session)
+        val id = components.kafkaProtocol.messageMatcher.requestMatch(msg)
         components.trackersPool
           .tracker(msg.inputTopic, msg.outputTopic, components.kafkaProtocol.messageMatcher, None)
           .track(

@@ -5,6 +5,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol._
+import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -28,14 +29,11 @@ case class KafkaProtocolBuilderNew(
     messageMatcher: KafkaMatcher = KafkaKeyMatcher,
 ) extends {
 
-  def matchByMessage: KafkaProtocolBuilderNew =
-    messageMatcher(KafkaMessageMatcher)
+  def matchByValue: KafkaProtocolBuilderNew =
+    messageMatcher(KafkaValueMatcher)
 
-  def matchByCustomMessage(customMessage: Expression[Any]): KafkaProtocolBuilderNew =
-    messageMatcher(KafkaCustomMessageMatcher(customMessage))
-
-  def matchByCustomKey(customKey: Expression[Any]): KafkaProtocolBuilderNew =
-    messageMatcher(KafkaCustomKeyMatcher(customKey))
+  def matchByMessage(keyExtractor: KafkaProtocolMessage => Array[Byte]): KafkaProtocolBuilderNew =
+    messageMatcher(KafkaMessageMatcher(keyExtractor))
 
   private def messageMatcher(matcher: KafkaMatcher): KafkaProtocolBuilderNew =
     copy(messageMatcher = matcher)
