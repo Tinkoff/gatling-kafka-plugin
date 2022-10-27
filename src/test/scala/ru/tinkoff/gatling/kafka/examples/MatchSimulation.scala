@@ -6,11 +6,37 @@ import io.gatling.core.structure.ScenarioBuilder
 import org.apache.kafka.clients.producer.ProducerConfig
 import ru.tinkoff.gatling.kafka.Predef._
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
+import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.duration.DurationInt
 
 class MatchSimulation extends Simulation {
+
+  val kafkaProtocolMatchByValue: KafkaProtocol = kafka.requestReply
+    .producerSettings(
+      Map(
+        ProducerConfig.ACKS_CONFIG              -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9092",
+      ),
+    )
+    .consumeSettings(
+      Map(
+        "bootstrap.servers" -> "localhost:9092",
+      ),
+    )
+    .timeout(5.seconds)
+    // for match by message value
+    .matchByValue
+
+  def matchByOwnVal(message: KafkaProtocolMessage): Array[Byte] = {
+    // do something with the message and extract the values your are interested in
+    // method is called:
+    // - for each message which will be sent out
+    // - for each message which has been received
+    "Custom Message".getBytes // just returning something
+  }
+
   val kafkaProtocolMatchByMessage: KafkaProtocol = kafka.requestReply
     .producerSettings(
       Map(
@@ -24,22 +50,7 @@ class MatchSimulation extends Simulation {
       ),
     )
     .timeout(5.seconds)
-    .matchByMessage
-
-  val kafkaProtocolMatchByCustomMessage: KafkaProtocol = kafka.requestReply
-    .producerSettings(
-      Map(
-        ProducerConfig.ACKS_CONFIG              -> "1",
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9092",
-      ),
-    )
-    .consumeSettings(
-      Map(
-        "bootstrap.servers" -> "localhost:9092",
-      ),
-    )
-    .timeout(5.seconds)
-    .matchByCustomMessage("CustomMessage_#{kekey}")
+    .matchByMessage(matchByOwnVal)
 
   val c                   = new AtomicInteger(0)
   val feeder: Feeder[Int] = Iterator.continually(Map("kekey" -> c.incrementAndGet()))
