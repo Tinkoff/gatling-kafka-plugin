@@ -1,7 +1,7 @@
 import Dependencies._
 //import ru.tinkoff.load.avro.RegistrySubject
 
-val scalaV      = "2.13.8"
+val scalaV      = "2.13.10"
 val avroSchemas = Seq() // for example Seq(RegistrySubject("test-hello-schema", 1))
 
 lazy val root = (project in file("."))
