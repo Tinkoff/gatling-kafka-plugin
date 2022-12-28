@@ -15,6 +15,6 @@ ThisBuild / developers   := List(
   ),
 )
 
-ThisBuild / description  := "Plugin to support kafka performance testing in Gatling(3.x.x)."
+ThisBuild / description  := "Plugin to support kafka performance testing in Gatling(3.9.x)."
 ThisBuild / licenses += ("Apache-2.0", url("http://www.apache.org/licenses/LICENSE-2.0"))
 ThisBuild / homepage     := Some(url("https://github.com/TinkoffCreditSystems/gatling-kafka-plugin"))
