@@ -1,8 +1,11 @@
 package ru.tinkoff.gatling.kafka.protocol
 
+import io.gatling.core.session.Expression
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
+import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol._
+import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
 import scala.concurrent.duration.{DurationInt, FiniteDuration}
 
@@ -23,7 +26,18 @@ case class KafkaProtocolBuilderNew(
     producerSettings: Map[String, AnyRef],
     consumeSettings: Map[String, AnyRef],
     timeout: FiniteDuration,
+    messageMatcher: KafkaMatcher = KafkaKeyMatcher,
 ) extends {
+
+  def matchByValue: KafkaProtocolBuilderNew =
+    messageMatcher(KafkaValueMatcher)
+
+  def matchByMessage(keyExtractor: KafkaProtocolMessage => Array[Byte]): KafkaProtocolBuilderNew =
+    messageMatcher(KafkaMessageMatcher(keyExtractor))
+
+  private def messageMatcher(matcher: KafkaMatcher): KafkaProtocolBuilderNew =
+    copy(messageMatcher = matcher)
+
   def build: KafkaProtocol = {
 
     val serializers = Map(
@@ -37,6 +51,6 @@ case class KafkaProtocolBuilderNew(
       StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG -> Serdes.ByteArray().getClass.getName,
     )
 
-    KafkaProtocol("test", producerSettings ++ serializers, consumeSettings ++ consumeDefaults, timeout)
+    KafkaProtocol("test", producerSettings ++ serializers, consumeDefaults ++ consumeSettings, timeout, messageMatcher)
   }
 }
