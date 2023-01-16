@@ -5,10 +5,8 @@ import static scala.jdk.javaapi.CollectionConverters.asScala;
 
 public class KafkaProtocolBuilderPropertiesStep {
 
-    private String topic;
+    private final String topic;
     private Map<String, Object> props;
-
-    private ru.tinkoff.gatling.kafka.protocol.KafkaProtocolBuilderPropertiesStep wrapped;
 
     public KafkaProtocolBuilderPropertiesStep(String topic, Map<String, Object> props){
         this.topic = topic;
@@ -17,8 +15,11 @@ public class KafkaProtocolBuilderPropertiesStep {
 
     public KafkaProtocolBuilder properties(Map<String, Object> props) {
         this.props = props;
-        scala.collection.immutable.Map<String, Object> scalaMap = scala.collection.immutable.Map.from(asScala(props));
-        return new KafkaProtocolBuilder(ru.tinkoff.gatling.kafka.protocol.KafkaProtocolBuilderPropertiesStep.apply(this.topic, scalaMap).properties(scalaMap));
+        scala.collection.immutable.Map<String, Object> scalaMap = scala.collection.immutable.Map.from(asScala(this.props));
+        return new KafkaProtocolBuilder(
+                ru.tinkoff.gatling.kafka.protocol.KafkaProtocolBuilderPropertiesStep.apply(this.topic, scalaMap)
+                        .properties(scalaMap)
+        );
     }
 
 
