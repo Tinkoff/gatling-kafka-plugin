@@ -7,7 +7,7 @@ import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.header.Headers
 import org.apache.kafka.common.header.internals.RecordHeaders
 import ru.tinkoff.gatling.kafka.Predef._
-import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
+import ru.tinkoff.gatling.kafka.protocol.{KafkaProtocol, KafkaProtocolBuilder, KafkaProtocolBuilderPropertiesStep}
 
 import java.util.concurrent.atomic.AtomicInteger
 import scala.concurrent.duration.DurationInt
@@ -17,6 +17,10 @@ class BasicSimulation extends Simulation {
   val kafkaConf: KafkaProtocol = kafka
     .topic("test.topic")
     .properties(Map(ProducerConfig.ACKS_CONFIG -> "1"))
+
+  val t: KafkaProtocolBuilder.type = kafka
+
+  val t1: KafkaProtocolBuilderPropertiesStep = kafka.topic("aaaa")
 
   val kafkaProtocolC: KafkaProtocol = kafka.requestReply
     .producerSettings(
@@ -31,6 +35,7 @@ class BasicSimulation extends Simulation {
       ),
     )
     .timeout(5.seconds)
+
   val c                             = new AtomicInteger(0)
   val feeder: Feeder[Int]           = Iterator.continually(Map("kekey" -> c.incrementAndGet()))
 
