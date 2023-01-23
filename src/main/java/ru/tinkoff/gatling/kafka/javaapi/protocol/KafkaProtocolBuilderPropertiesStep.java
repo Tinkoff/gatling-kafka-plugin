@@ -16,6 +16,7 @@ public class KafkaProtocolBuilderPropertiesStep {
     public KafkaProtocolBuilder properties(Map<String, Object> props) {
         this.props = props;
         scala.collection.immutable.Map<String, Object> scalaMap = scala.collection.immutable.Map.from(asScala(this.props));
+        System.out.printf("Here: %s %s%n", this.topic, scalaMap);
         return new KafkaProtocolBuilder(
                 ru.tinkoff.gatling.kafka.protocol.KafkaProtocolBuilderPropertiesStep.apply(this.topic, scalaMap)
                         .properties(scalaMap)
