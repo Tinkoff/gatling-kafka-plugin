@@ -1,8 +1,10 @@
 package ru.tinkoff.gatling.javaapi.kafka.examples;
 
 import io.gatling.javaapi.core.Simulation;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 import ru.tinkoff.gatling.kafka.javaapi.protocol.*;
 import org.apache.kafka.clients.producer.ProducerConfig;
+import ru.tinkoff.gatling.kafka.javaapi.request.builder.RequestReplyBuilder;
 
 import java.time.Duration;
 import java.util.Map;
@@ -45,4 +47,10 @@ public class BasicSimulation extends Simulation {
                     )
             )
             .timeout(Duration.ofSeconds(30));
+
+    public RequestReplyBuilder<?, ?> krr1  = kafka("requestReply")
+            .requestReply()
+            .requestTopic("inputTopic")
+            .replyTopic("outputTopic")
+            .send("somekey", "someval", new RecordHeaders(), String.class, String.class);
 }

@@ -2,7 +2,7 @@ package ru.tinkoff.gatling.kafka.javaapi.request.builder;
 
 public class RRInTopicStep {
 
-    private String inputTopic;
+    private final String inputTopic;
 
     public RRInTopicStep(String inputTopic) {
         this.inputTopic = inputTopic;
