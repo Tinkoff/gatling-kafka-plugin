@@ -2,7 +2,7 @@ import sbt._
 
 object Dependencies {
   private object Versions {
-    val kafka   = "7.3.1-ce"
+    val kafka   = "7.3.0-ce"
     val gatling = "3.9.0"
     val avro4s  = "4.1.0"
     val avro    = "1.11.1"
@@ -25,6 +25,6 @@ object Dependencies {
   lazy val avroCompiler: ModuleID = "org.apache.avro" % "avro-compiler" % Versions.avro
   lazy val avroCore: ModuleID     = "org.apache.avro" % "avro"          % Versions.avro
   lazy val avroSerdes: ModuleID   =
-    ("io.confluent" % "kafka-streams-avro-serde" % "7.3.1").exclude("org.apache.kafka", "kafka-streams-scala")
+    ("io.confluent" % "kafka-streams-avro-serde" % "7.3.0").exclude("org.apache.kafka", "kafka-streams-scala")
 
 }

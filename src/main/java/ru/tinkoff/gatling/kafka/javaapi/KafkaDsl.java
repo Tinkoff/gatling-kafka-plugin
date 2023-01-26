@@ -12,7 +12,7 @@ public final class KafkaDsl {
     }
 
     public static KafkaRequestBuilderBase kafka(String requestName) {
-        return new KafkaRequestBuilderBase(ru.tinkoff.gatling.kafka.Predef.kafka(toStringExpression(requestName)));
+        return new KafkaRequestBuilderBase(ru.tinkoff.gatling.kafka.Predef.kafka(toStringExpression(requestName)), requestName);
     }
 
 }

@@ -11,14 +11,16 @@ public class RROutTopicStep {
 
     private final String inputTopic;
     private final String outputTopic;
+    private final String requestName;
 
-    public RROutTopicStep(String inputTopic, String outputTopic) {
+    public RROutTopicStep(String inputTopic, String outputTopic, String requestName) {
         this.inputTopic = inputTopic;
         this.outputTopic = outputTopic;
+        this.requestName = requestName;
     }
 
     public <K, V> RequestReplyBuilder<?, ?> send(K key, V payload, Headers headers, Class<K> keyClass, Class<V> payloadClass) {
-        return new RequestReplyBuilder<K, V>(KafkaRequestBuilderBase.apply(toStringExpression("myRequest")).requestReply()
+        return new RequestReplyBuilder<K, V>(KafkaRequestBuilderBase.apply(toStringExpression(this.requestName)).requestReply()
                 .requestTopic(toStringExpression(this.inputTopic))
                 .replyTopic(toStringExpression(this.outputTopic))
                 .send(

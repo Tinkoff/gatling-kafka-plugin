@@ -7,9 +7,11 @@ import static io.gatling.javaapi.core.internal.Expressions.*;
 public class KafkaRequestBuilderBase {
 
     private final ru.tinkoff.gatling.kafka.request.builder.KafkaRequestBuilderBase wrapped;
+    private final String requestName;
 
-    public KafkaRequestBuilderBase(ru.tinkoff.gatling.kafka.request.builder.KafkaRequestBuilderBase wrapped){
+    public KafkaRequestBuilderBase(ru.tinkoff.gatling.kafka.request.builder.KafkaRequestBuilderBase wrapped, String requestName){
         this.wrapped = wrapped;
+        this.requestName = requestName;
     }
 
     public <K,V> RequestBuilder<?, ?> send(K key, V payload, Headers headers) {
@@ -29,7 +31,7 @@ public class KafkaRequestBuilderBase {
     }
 
     public ReqRepBase requestReply() {
-        return new ReqRepBase();
+        return new ReqRepBase(requestName);
     }
 
 }
