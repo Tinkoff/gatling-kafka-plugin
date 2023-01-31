@@ -1,6 +1,7 @@
 package ru.tinkoff.gatling.kafka.javaapi.request.builder;
 
 import org.apache.kafka.common.header.Headers;
+import org.apache.kafka.common.header.internals.RecordHeaders;
 
 import static io.gatling.javaapi.core.internal.Expressions.*;
 
@@ -12,6 +13,16 @@ public class KafkaRequestBuilderBase {
     public KafkaRequestBuilderBase(ru.tinkoff.gatling.kafka.request.builder.KafkaRequestBuilderBase wrapped, String requestName){
         this.wrapped = wrapped;
         this.requestName = requestName;
+    }
+
+    public <K,V> RequestBuilder<?, ?> send(K key, V payload) {
+        return new RequestBuilder<>(
+                wrapped.send(
+                        toStaticValueExpression(key),
+                        toStaticValueExpression(payload),
+                        toStaticValueExpression(new RecordHeaders()),
+                        ru.tinkoff.gatling.kafka.request.builder.Sender.noSchemaSender()
+                ));
     }
 
     public <K,V> RequestBuilder<?, ?> send(K key, V payload, Headers headers) {
