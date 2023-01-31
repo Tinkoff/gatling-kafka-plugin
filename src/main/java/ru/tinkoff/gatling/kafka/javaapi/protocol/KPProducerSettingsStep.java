@@ -4,7 +4,7 @@ import java.util.Map;
 
 public class KPProducerSettingsStep {
 
-    private Map<String, Object> ps;
+    private final Map<String, Object> ps;
 
     public KPProducerSettingsStep(Map<String, Object> ps) {
         this.ps = ps;
