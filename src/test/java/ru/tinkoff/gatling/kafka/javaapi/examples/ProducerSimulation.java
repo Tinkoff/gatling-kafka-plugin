@@ -1,4 +1,4 @@
-package ru.tinkoff.gatling.javaapi.kafka.examples;
+package ru.tinkoff.gatling.kafka.javaapi.examples;
 
 import io.gatling.javaapi.core.ScenarioBuilder;
 import io.gatling.javaapi.core.Simulation;
