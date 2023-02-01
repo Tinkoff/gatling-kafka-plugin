@@ -18,11 +18,11 @@ class BasicSimulation : Simulation() {
         .producerSettings(
             mapOf<String, Any>(
                 ProducerConfig.ACKS_CONFIG to "1",
-                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9093",
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092",
             )
         )
         .consumeSettings(
-            mapOf<String, Any>("bootstrap.servers" to "localhost:9093")
+            mapOf<String, Any>("bootstrap.servers" to "localhost:9092")
         ).timeout(Duration.ofSeconds(5))
 
     private val c = AtomicInteger(0)
