@@ -10,7 +10,7 @@ Plugin to support Kafka in Gatling (3.9.x)
 
 ### Getting Started
 
-Plugin is currently available for Scala 2.13.
+Plugin is currently available for Scala 2.13, Java 17, Kotlin.
 
 You may include plugin as dependency in project with your tests. Write
 
