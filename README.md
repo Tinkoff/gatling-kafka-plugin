@@ -4,23 +4,51 @@
 
 # Introduction
 
-Plugin to support Kafka in Gatling(3.7.x)
+Plugin to support Kafka in Gatling (3.9.x)
 
 # Usage
 
 ### Getting Started
 
-Plugin is currently available for Scala 2.13.
+Plugin is currently available for Scala 2.13, Java 17, Kotlin.
 
-You may include plugin as dependency in project with your tests. Write 
+You may include plugin as dependency in project with your tests. Write
+
+### Scala
 
 ```scala
 libraryDependencies += "ru.tinkoff" %% "gatling-kafka-plugin" % <version> % Test
 ```
 
+### Java
+
+Write this to your dependencies block in build.gradle:
+
+```java
+gatling "ru.tinkoff:gatling-kafka-plugin_2.13:<version>"
+```
+
+### Kotlin
+
+Write this to your dependencies block in build.gradle:
+
+```kotlin
+gatling("ru.tinkoff:gatling-kafka-plugin_2.13:<version>")
+```
+
 ## Example Scenarios
 
-Examples [here](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/tree/master/src/test/scala/ru/tinkoff/gatling/kafka/examples)
+### Scala
+
+Examples [here](src/test/scala/ru/tinkoff/gatling/kafka/examples)
+
+### Java
+
+Examples [here](src/test/java/ru/tinkoff/gatling/kafka/javaapi/examples)
+
+### Kotlin
+
+Examples [here](src/test/kotlin/ru/tinkoff/gatling/kafka/javaapi/examples)
 
 ## Download and create Avro schema
 
