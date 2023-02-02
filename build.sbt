@@ -16,7 +16,6 @@ lazy val root = (project in file("."))
 //    schemaRegistryUrl := "http://test-schema-registry:8081",
     resolvers ++= Seq(
       "Confluent" at "https://packages.confluent.io/maven/",
-
     ),
     resolvers ++= Resolver.sonatypeOssRepos("public"),
     scalacOptions ++= Seq(
