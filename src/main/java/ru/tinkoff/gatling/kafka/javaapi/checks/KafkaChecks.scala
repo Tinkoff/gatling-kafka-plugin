@@ -31,31 +31,31 @@ object KafkaChecks {
     javaCheck match {
       case _: io.gatling.javaapi.core.CheckBuilder =>
         val checkBuilder = javaCheck.asInstanceOf[io.gatling.javaapi.core.CheckBuilder]
-        val scalaCheck = checkBuilder.asScala
+        val scalaCheck   = checkBuilder.asScala
         checkBuilder.`type` match {
-          case CoreCheckType.BodyBytes =>
+          case CoreCheckType.BodyBytes     =>
             scalaCheck
               .asInstanceOf[CheckBuilder[BodyBytesCheckType, Array[Byte]]]
               .build(KafkaCheckMaterializer.bodyBytes)
-          case CoreCheckType.BodyString =>
+          case CoreCheckType.BodyString    =>
             scalaCheck
               .asInstanceOf[CheckBuilder[BodyStringCheckType, String]]
               .build(KafkaCheckMaterializer.bodyString(io.gatling.core.Predef.configuration))
-          case CoreCheckType.Substring =>
+          case CoreCheckType.Substring     =>
             scalaCheck
               .asInstanceOf[CheckBuilder[SubstringCheckType, String]]
               .build(KafkaCheckMaterializer.substring(io.gatling.core.Predef.configuration))
-          case CoreCheckType.XPath =>
+          case CoreCheckType.XPath         =>
             scalaCheck
               .asInstanceOf[CheckBuilder[XPathCheckType, XdmNode]]
               .build(KafkaCheckMaterializer.xpath(io.gatling.core.Predef.configuration))
-          case CoreCheckType.JsonPath =>
+          case CoreCheckType.JsonPath      =>
             scalaCheck
               .asInstanceOf[CheckBuilder[JsonPathCheckType, JsonNode]]
               .build(
                 KafkaCheckMaterializer.jsonPath(io.gatling.core.Predef.defaultJsonParsers, io.gatling.core.Predef.configuration),
               )
-          case CoreCheckType.JmesPath =>
+          case CoreCheckType.JmesPath      =>
             scalaCheck
               .asInstanceOf[CheckBuilder[JmesPathCheckType, JsonNode]]
               .build(
@@ -67,7 +67,7 @@ object KafkaChecks {
               .build(
                 KafkaCheckMaterializer.kafkaStatusCheck,
               )
-          case unknown => throw new IllegalArgumentException(s"Kafka DSL doesn't support $unknown")
+          case unknown                     => throw new IllegalArgumentException(s"Kafka DSL doesn't support $unknown")
         }
     }
   }
