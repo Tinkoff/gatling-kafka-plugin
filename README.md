@@ -4,7 +4,7 @@
 
 # Introduction
 
-Plugin to support Kafka in Gatling(3.9.x)
+Plugin to support Kafka in Gatling (3.9.x)
 
 # Usage
 
@@ -25,7 +25,7 @@ libraryDependencies += "ru.tinkoff" %% "gatling-kafka-plugin" % <version> % Test
 Write this to your dependencies block in build.gradle:
 
 ```java
-gatling "ru.tinkoff:gatling-amqp-plugin_2.13:<version>"
+gatling "ru.tinkoff:gatling-kafka-plugin_2.13:<version>"
 ```
 
 ### Kotlin
@@ -33,7 +33,7 @@ gatling "ru.tinkoff:gatling-amqp-plugin_2.13:<version>"
 Write this to your dependencies block in build.gradle:
 
 ```kotlin
-gatling("ru.tinkoff:gatling-amqp-plugin_2.13:<version>")
+gatling("ru.tinkoff:gatling-kafka-plugin_2.13:<version>")
 ```
 
 ## Example Scenarios
