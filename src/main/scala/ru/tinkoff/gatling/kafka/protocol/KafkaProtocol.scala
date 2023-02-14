@@ -66,6 +66,7 @@ case class KafkaProtocol(
     consumeProperties: Map[String, AnyRef],
     timeout: FiniteDuration,
     messageMatcher: KafkaMatcher,
+    messagesToSkip: Int,
 ) extends Protocol {
 
   def topic(t: String): KafkaProtocol = copy(producerTopic = t)
@@ -76,5 +77,6 @@ case class KafkaProtocol(
   def producerProperties(properties: Map[String, AnyRef]): KafkaProtocol = copy(producerProperties = properties)
   def consumeProperties(properties: Map[String, AnyRef]): KafkaProtocol  = copy(consumeProperties = properties)
   def timeout(t: FiniteDuration): KafkaProtocol                          = copy(timeout = t)
+  def skipMatches(n: Int): KafkaProtocol                                 = copy(messagesToSkip = n)
 
 }

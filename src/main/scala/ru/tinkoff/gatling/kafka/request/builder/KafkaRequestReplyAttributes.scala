@@ -15,4 +15,5 @@ case class KafkaRequestReplyAttributes[K, V](
     keySerializer: Serializer[K],
     valueSerializer: Serializer[V],
     checks: List[KafkaCheck],
+    skipMatches: Int,
 )

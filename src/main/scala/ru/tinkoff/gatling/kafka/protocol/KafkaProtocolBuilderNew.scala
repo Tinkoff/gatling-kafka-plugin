@@ -1,6 +1,5 @@
 package ru.tinkoff.gatling.kafka.protocol
 
-import io.gatling.core.session.Expression
 import org.apache.kafka.clients.producer.ProducerConfig
 import org.apache.kafka.common.serialization.Serdes
 import org.apache.kafka.streams.StreamsConfig
@@ -17,8 +16,11 @@ object KafkaProtocolBuilderNew {
   }
 
   case class KPConsumeSettingsStep(producerSettings: Map[String, AnyRef], consumeSettings: Map[String, AnyRef]) {
-    def timeout(t: FiniteDuration): KafkaProtocolBuilderNew = KafkaProtocolBuilderNew(producerSettings, consumeSettings, t)
-    def withDefaultTimeout: KafkaProtocolBuilderNew         = KafkaProtocolBuilderNew(producerSettings, consumeSettings, 60.seconds)
+
+    def timeout(t: FiniteDuration): KafkaProtocolBuilderNew =
+      KafkaProtocolBuilderNew(producerSettings, consumeSettings, t, skipMessages = 0)
+    def withDefaultTimeout: KafkaProtocolBuilderNew         =
+      KafkaProtocolBuilderNew(producerSettings, consumeSettings, 60.seconds, skipMessages = 0)
   }
 }
 
@@ -27,6 +29,7 @@ case class KafkaProtocolBuilderNew(
     consumeSettings: Map[String, AnyRef],
     timeout: FiniteDuration,
     messageMatcher: KafkaMatcher = KafkaKeyMatcher,
+    skipMessages: Int,
 ) extends {
 
   def matchByValue: KafkaProtocolBuilderNew =
@@ -37,6 +40,8 @@ case class KafkaProtocolBuilderNew(
 
   private def messageMatcher(matcher: KafkaMatcher): KafkaProtocolBuilderNew =
     copy(messageMatcher = matcher)
+  def skipMatches(n: Int): KafkaProtocolBuilderNew                           =
+    copy(skipMessages = n)
 
   def build: KafkaProtocol = {
 
@@ -51,6 +56,13 @@ case class KafkaProtocolBuilderNew(
       StreamsConfig.DEFAULT_VALUE_SERDE_CLASS_CONFIG -> Serdes.ByteArray().getClass.getName,
     )
 
-    KafkaProtocol("test", producerSettings ++ serializers, consumeDefaults ++ consumeSettings, timeout, messageMatcher)
+    KafkaProtocol(
+      "test",
+      producerSettings ++ serializers,
+      consumeDefaults ++ consumeSettings,
+      timeout,
+      messageMatcher,
+      skipMessages,
+    )
   }
 }

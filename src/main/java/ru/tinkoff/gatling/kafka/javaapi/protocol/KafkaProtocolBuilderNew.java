@@ -23,6 +23,11 @@ public class KafkaProtocolBuilderNew implements ProtocolBuilder {
         return this;
     }
 
+    public KafkaProtocolBuilderNew skipMatches( int n) {
+        this.wrapped = wrapped.skipMatches(n);
+        return this;
+    }
+
     @Override
     public Protocol protocol() {
         return wrapped.build();

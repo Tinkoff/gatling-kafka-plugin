@@ -15,6 +15,6 @@ case object KafkaProtocolBuilder {
 
 case class KafkaProtocolBuilder(topic: String, props: Map[String, Object]) {
 
-  def build = new KafkaProtocol(topic, props, props, 60.seconds, KafkaKeyMatcher)
+  def build = new KafkaProtocol(topic, props, props, 60.seconds, KafkaKeyMatcher, 0)
 
 }

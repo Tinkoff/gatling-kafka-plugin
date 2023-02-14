@@ -12,6 +12,7 @@ import io.gatling.core.stats.StatsEngine
 import ru.tinkoff.gatling.kafka.KafkaCheck
 import ru.tinkoff.gatling.kafka.request.KafkaProtocolMessage
 
+import java.util.concurrent.atomic.AtomicInteger
 import scala.collection.mutable
 import scala.concurrent.duration.DurationInt
 
@@ -28,6 +29,7 @@ object KafkaMessageTrackerActor {
       session: Session,
       next: Action,
       requestName: String,
+      skipMessages: Int,
   )
 
   case class MessageConsumed(
@@ -47,10 +49,11 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
   def triggerPeriodicTimeoutScan(
       periodicTimeoutScanTriggered: Boolean,
       sentMessages: mutable.HashMap[String, MessagePublished],
+      skipMessages: mutable.HashMap[String, AtomicInteger],
       timedOutMessages: mutable.ArrayBuffer[MessagePublished],
   ): Unit =
     if (!periodicTimeoutScanTriggered) {
-      context.become(onMessage(periodicTimeoutScanTriggered = true, sentMessages, timedOutMessages))
+      context.become(onMessage(periodicTimeoutScanTriggered = true, sentMessages, skipMessages, timedOutMessages))
       timers.startTimerWithFixedDelay("timeoutTimer", TimeoutScan, 1000.millis)
     }
 
@@ -58,6 +61,7 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
     onMessage(
       periodicTimeoutScanTriggered = false,
       mutable.HashMap.empty[String, MessagePublished],
+      mutable.HashMap.empty[String, AtomicInteger],
       mutable.ArrayBuffer.empty[MessagePublished],
     )
 
@@ -116,23 +120,36 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
   private def onMessage(
       periodicTimeoutScanTriggered: Boolean,
       sentMessages: mutable.HashMap[String, MessagePublished],
+      skipMessages: mutable.HashMap[String, AtomicInteger],
       timedOutMessages: mutable.ArrayBuffer[MessagePublished],
   ): Receive = {
     // message was sent; add the timestamps to the map
     case messageSent: MessagePublished               =>
       val key = makeKeyForSentMessages(messageSent.matchId)
       sentMessages += key -> messageSent
+      skipMessages += key -> new AtomicInteger(messageSent.skipMessages)
       if (messageSent.replyTimeout > 0) {
-        triggerPeriodicTimeoutScan(periodicTimeoutScanTriggered, sentMessages, timedOutMessages)
+        triggerPeriodicTimeoutScan(periodicTimeoutScanTriggered, sentMessages, skipMessages, timedOutMessages)
       }
 
     // message was received; publish stats and remove from the map
     case MessageConsumed(replyId, received, message) =>
       // if key is missing, message was already acked and is a dup, or request timeout
       val key = makeKeyForSentMessages(replyId)
-      sentMessages.remove(key).foreach { case MessagePublished(_, sent, _, checks, session, next, requestName) =>
-        processMessage(session, sent, received, checks, message, next, requestName)
-      }
+
+      if (skipMessages.contains(key))
+        if (skipMessages(key).get() == 0) {
+          logger.debug(s"processing match for key $key")
+          skipMessages.remove(key)
+          sentMessages.remove(key).foreach { case MessagePublished(_, sent, _, checks, session, next, requestName, _) =>
+            processMessage(session, sent, received, checks, message, next, requestName)
+          }
+        } else {
+          skipMessages(key).decrementAndGet()
+          logger.debug(s"skipping match for key $key, left ${skipMessages(key).get()} matches")
+        }
+      else
+        logger.debug(s"skipping processing message with key $key as it doesn't exist in skipMessages")
 
     case TimeoutScan =>
       val now = clock.nowMillis
@@ -142,8 +159,10 @@ class KafkaMessageTrackerActor(statsEngine: StatsEngine, clock: Clock) extends A
           timedOutMessages += messagePublished
         }
       }
-      for (MessagePublished(matchId, sent, receivedTimeout, _, session, next, requestName) <- timedOutMessages) {
-        sentMessages.remove(makeKeyForSentMessages(matchId))
+      for (MessagePublished(matchId, sent, receivedTimeout, _, session, next, requestName, _) <- timedOutMessages) {
+        val k = makeKeyForSentMessages(matchId)
+        sentMessages.remove(k)
+        skipMessages.remove(k)
         executeNext(
           session.markAsFailed,
           sent,

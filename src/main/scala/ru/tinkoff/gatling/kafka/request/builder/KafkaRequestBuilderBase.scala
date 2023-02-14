@@ -42,6 +42,7 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
             implicitly[Serde[K]].serializer(),
             implicitly[Serde[V]].serializer(),
             List.empty,
+            0,
           ),
         )
       }

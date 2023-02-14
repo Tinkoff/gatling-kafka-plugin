@@ -98,6 +98,7 @@ class KafkaRequestReplyAction[K: ClassTag, V: ClassTag](
             session,
             next,
             requestNameString,
+            components.kafkaProtocol.messagesToSkip,
           )
       },
       e => {

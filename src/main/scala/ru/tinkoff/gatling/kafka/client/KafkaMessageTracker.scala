@@ -16,6 +16,7 @@ class KafkaMessageTracker(actor: ActorRef) {
       session: Session,
       next: Action,
       requestName: String,
+      skipMessages: Int,
   ): Unit =
     actor ! MessagePublished(
       matchId,
@@ -25,5 +26,6 @@ class KafkaMessageTracker(actor: ActorRef) {
       session,
       next,
       requestName,
+      skipMessages,
     )
 }
