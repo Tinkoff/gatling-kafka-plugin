@@ -29,6 +29,22 @@ class MatchSimulation extends Simulation {
     // for match by message value
     .matchByValue
 
+  val kafkaProtocolMatchByKeyExpectMultipleMessagesInResponse: KafkaProtocol = kafka.requestReply
+    .producerSettings(
+      Map(
+        ProducerConfig.ACKS_CONFIG              -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9092",
+      ),
+    )
+    .consumeSettings(
+      Map(
+        "bootstrap.servers" -> "localhost:9092",
+      ),
+    )
+    .timeout(5.seconds)
+    // each request message is matched by 3 replies, first two matched messages will be skipped and the third one recorded
+    .skipMatches(2)
+
   def matchByOwnVal(message: KafkaProtocolMessage): Array[Byte] = {
     // do something with the message and extract the values your are interested in
     // method is called:

@@ -32,6 +32,19 @@ public class MatchSimulation extends Simulation {
             .timeout(Duration.ofSeconds(5))
     // for match by message value
     .matchByValue();
+    private final KafkaProtocolBuilderNew kafkaProtocolMatchByKeyExpectMultipleMessagesInResponse = kafka().requestReply()
+            .producerSettings(
+                    Map.of(
+                            ProducerConfig.ACKS_CONFIG, "1",
+                            ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092"
+                    )
+            )
+            .consumeSettings(
+                    Map.of("bootstrap.servers", "localhost:9092")
+            )
+            .timeout(Duration.ofSeconds(5))
+            // each request message is matched by 3 replies, first two matched messages will be skipped and the third one recorded
+            .skipMatches(2);
 
     private byte[] matchByOwnVal(KafkaProtocolMessage message) {
         // do something with the message and extract the values you are interested in

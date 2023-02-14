@@ -47,6 +47,22 @@ class MatchSimulation : Simulation() {
         .timeout(Duration.ofSeconds(5))
         .matchByMessage { message: KafkaProtocolMessage -> matchByOwnVal(message) }
 
+    private val kafkaProtocolMatchByKeyExpectMultipleMessagesInResponse = kafka().requestReply()
+        .producerSettings(
+            mapOf<String, Any>(
+                ProducerConfig.ACKS_CONFIG to "1",
+                ProducerConfig.BOOTSTRAP_SERVERS_CONFIG to "localhost:9092"
+            )
+        )
+        .consumeSettings(
+            mapOf<String, Any>(
+                "bootstrap.servers" to "localhost:9092"
+            )
+        )
+        .timeout(Duration.ofSeconds(5))
+        // each request message is matched by 3 replies, first two matched messages will be skipped and the third one recorded
+        .skipMatches(2)
+
     private val c = AtomicInteger(0)
 
     private val feeder = generateSequence {
