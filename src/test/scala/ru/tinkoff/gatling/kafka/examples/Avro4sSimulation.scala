@@ -4,29 +4,12 @@ import com.sksamuel.avro4s._
 import io.gatling.core.Predef._
 import io.gatling.core.structure.ScenarioBuilder
 import org.apache.kafka.clients.producer.ProducerConfig
+import org.apache.kafka.common.header.Headers
+import org.apache.kafka.common.header.internals.RecordHeaders
 import ru.tinkoff.gatling.kafka.Predef._
 import ru.tinkoff.gatling.kafka.protocol.KafkaProtocol
 
-import scala.concurrent.duration._
-
 class Avro4sSimulation extends Simulation {
-
-  val kafkaConf: KafkaProtocol = kafka
-    // Kafka topic name
-    .topic("test")
-    // Kafka producer configs
-    .properties(
-      Map(
-        ProducerConfig.ACKS_CONFIG                   -> "1",
-        // list of Kafka broker hostname and port pairs
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9092",
-        // in most cases, StringSerializer or ByteArraySerializer
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   ->
-          "org.apache.kafka.common.serialization.StringSerializer",
-        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG ->
-          "org.apache.kafka.common.serialization.StringSerializer",
-      ),
-    )
 
   val kafkaAclConf: KafkaProtocol = kafka
     .topic("my.acl.topic")
@@ -37,35 +20,29 @@ class Avro4sSimulation extends Simulation {
         ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
         ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "io.confluent.kafka.serializers.KafkaAvroSerializer",
         "value.subject.name.strategy"                -> "io.confluent.kafka.serializers.subject.RecordNameStrategy",
-        "schema.registry.url"                        -> "http://schema.registry.com",
-        "security.protocol"                          -> "SASL_PLAINTEXT",
-        "sasl.mechanism"                             -> "SCRAM-SHA-512",
-        "sasl.jaas.config"                           -> s"""org.apache.kafka.common.security.scram.ScramLoginModule required username="MY-USER" password="SECRET-PASSWORD";""",
+        "schema.registry.url"                        -> "http://localhost:9094",
       ),
     )
 
   case class Ingredient(name: String, sugar: Double, fat: Double)
 
-  implicit lazy val ingridientToRecord: ToRecord[Ingredient]     = ToRecord.apply
-  implicit lazy val ingridientFromRecord: FromRecord[Ingredient] = FromRecord.apply
-  implicit lazy val ingridientScemaFor: SchemaFor[Ingredient]    = SchemaFor.apply
-  implicit lazy val ingridientFormat: RecordFormat[Ingredient]   = RecordFormat.apply
+  implicit val ingridientToRecord: ToRecord[Ingredient]     = ToRecord.apply
+  implicit val ingridientFromRecord: FromRecord[Ingredient] = FromRecord.apply
+  implicit val ingridientSchemaFor: SchemaFor[Ingredient]   = SchemaFor.apply
+  implicit val ingridientFormat: RecordFormat[Ingredient]   = RecordFormat.apply
+  implicit val ingredientHeaders: Headers                   = new RecordHeaders()
 
   val scn: ScenarioBuilder = scenario("Kafka Test")
     .exec(
-      kafka("Simple Request")
+      kafka("Simple Avro4s Request")
         // message to send
         .send[Ingredient](Ingredient("Cheese", 0d, 70d)),
     )
     .exec(
-      kafka("Simple Request with Key")
+      kafka("Simple Avro4s Request with Key")
         // message to send
         .send[String, Ingredient]("Key", Ingredient("Cheese", 0d, 70d)),
     )
 
-  setUp(
-    scn
-      .inject(constantUsersPerSec(10) during (90 seconds)),
-  )
-    .protocols(kafkaConf)
+  setUp(scn.inject(atOnceUsers(1))).protocols(kafkaAclConf)
 }

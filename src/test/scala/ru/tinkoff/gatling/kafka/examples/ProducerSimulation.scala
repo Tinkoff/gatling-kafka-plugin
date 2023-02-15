@@ -11,13 +11,22 @@ class ProducerSimulation extends Simulation {
   val kafkaConsumerConf: KafkaProtocol =
     kafka
       .topic("test.topic")
-      .properties(Map(ProducerConfig.ACKS_CONFIG -> "1"))
+      .properties(
+        Map(
+          ProducerConfig.ACKS_CONFIG                   -> "1",
+          ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
+          ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.DoubleSerializer",
+          ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9092",
+        ),
+      )
 
   val scn: ScenarioBuilder = scenario("Basic")
     .exec(
       kafka("BasicRequest")
-        .send[String]("foo"),
+        .send[Double](1.16423),
     )
-    .exec(kafka("dld").send[String, Double]("true", 12.0))
+    .exec(kafka("BasicRequestWithKey").send[String, Double]("true", 12.0))
+
+  setUp(scn.inject(atOnceUsers(5))).protocols(kafkaConsumerConf)
 
 }
