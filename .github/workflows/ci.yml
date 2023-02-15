@@ -34,7 +34,7 @@ jobs:
         KAFKA_INTER_BROKER_LISTENER_NAME: BROKER
         KAFKA_BROKER_ID: "1"
         KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: "1"
-        KAFKA_CREATE_TOPICS: "myTopic:1:1
+        KAFKA_CREATE_TOPICS: "myTopic:1:1"
       ports:
         - '9092:9092'
         - '9093:9093'
@@ -66,7 +66,7 @@ jobs:
         run: sbt clean scalafmtCheckAll scalafmtSbtCheck compile test
         
       - name: Tests
-        run: sbt clean coverage 'Gatling / testOnly ru.tinkoff.load.jdbc.test.DebugTest' coverageReport
+        run: sbt clean coverage "Gatling / testOnly ru.tinkoff.load.jdbc.test.DebugTest" coverageReport
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
