@@ -46,13 +46,22 @@ class TrackersPool(
           if (messageMatcher.responseMatch(message) == null) {
             logger.error(s"no messageMatcher key for read message")
           } else {
-            logger.info(s" --- received ${new String(k)} ${new String(v)}")
+            if (k == null || v == null)
+              logger.info(s" --- received message with null key or value")
+            else
+              logger.info(s" --- received  ${new String(k)} ${new String(v)}")
             val receivedTimestamp = clock.nowMillis
             val replyId           = messageMatcher.responseMatch(message)
-            logMessage(
-              s"Record received key=${new String(k)}",
-              message,
-            )
+            if (k != null)
+              logMessage(
+                s"Record received key=${new String(k)}",
+                message,
+              )
+            else
+              logMessage(
+                s"Record received key=null",
+                message,
+              )
 
             actor ! MessageConsumed(
               replyId,
