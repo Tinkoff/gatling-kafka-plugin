@@ -59,7 +59,7 @@ jobs:
         run: sbt clean scalafmtCheckAll scalafmtSbtCheck compile test
         
       - name: Tests
-        run: sbt clean coverage "Gatling / testOnly ru.tinkoff.load.jdbc.test.DebugTest" coverageReport
+        run: sbt coverage "Gatling / testOnly ru.tinkoff.gatling.kafka.examples.KafkaGatlingTest" coverageReport
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
