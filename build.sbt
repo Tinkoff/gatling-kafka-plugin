@@ -12,6 +12,7 @@ lazy val root = (project in file("."))
     name         := "gatling-kafka-plugin",
     scalaVersion := scalaV,
     libraryDependencies ++= gatling,
+    libraryDependencies ++= gatlingTest,
     libraryDependencies ++= kafka,
     libraryDependencies ++= Seq(avro4s, avroCore, avroSerdes, avroSerializers),
     schemaRegistrySubjects ++= avroSchemas,
