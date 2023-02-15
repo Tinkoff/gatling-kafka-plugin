@@ -10,8 +10,13 @@ object Dependencies {
   }
 
   lazy val gatling: Seq[ModuleID] = Seq(
-    "io.gatling" % "gatling-core"           % Versions.gatling % "provided",
-    "io.gatling" % "gatling-test-framework" % Versions.gatling % "provided",
+    "io.gatling" % "gatling-core"      % Versions.gatling % "provided",
+    "io.gatling" % "gatling-core-java" % Versions.gatling % "provided",
+  )
+
+  lazy val gatlingTest: Seq[ModuleID] = Seq(
+    "io.gatling.highcharts" % "gatling-charts-highcharts" % Versions.gatling % "it,test",
+    "io.gatling"            % "gatling-test-framework"    % Versions.gatling % "it,test",
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
@@ -27,5 +32,6 @@ object Dependencies {
   lazy val avroCore: ModuleID     = "org.apache.avro" % "avro"          % Versions.avro
   lazy val avroSerdes: ModuleID   =
     ("io.confluent" % "kafka-streams-avro-serde" % "7.3.0").exclude("org.apache.kafka", "kafka-streams-scala")
+  lazy val avroSerializers: ModuleID = "io.confluent" % "kafka-avro-serializer" % "7.3.0"
 
 }
