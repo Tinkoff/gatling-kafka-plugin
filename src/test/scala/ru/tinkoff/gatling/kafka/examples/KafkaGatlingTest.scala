@@ -171,6 +171,8 @@ class KafkaGatlingTest extends Simulation {
     scn2.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfBytes),
     scnAvro4s.inject(atOnceUsers(1)).protocols(kafkaAvro4sConf),
     scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
+  ).assertions(
+    global.failedRequests.percent.lt(15.0)
   )
 
 }

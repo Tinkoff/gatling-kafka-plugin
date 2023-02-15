@@ -12,8 +12,8 @@ object Dependencies {
   lazy val gatling: Seq[ModuleID] = Seq(
     "io.gatling"            % "gatling-core"              % Versions.gatling % "provided",
     "io.gatling"            % "gatling-core-java"         % Versions.gatling % "provided",
-    "io.gatling.highcharts" % "gatling-charts-highcharts" % Versions.gatling % "provided",
-    "io.gatling"            % "gatling-test-framework"    % Versions.gatling % "provided",
+    "io.gatling.highcharts" % "gatling-charts-highcharts" % Versions.gatling % "it,test",
+    "io.gatling"            % "gatling-test-framework"    % Versions.gatling % "it,test",
   )
 
   lazy val kafka: Seq[ModuleID] = Seq(
