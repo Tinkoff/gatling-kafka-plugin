@@ -4,14 +4,16 @@ import Dependencies._
 val scalaV      = "2.13.10"
 val avroSchemas = Seq() // for example Seq(RegistrySubject("test-hello-schema", 1))
 
+coverageEnabled := true
+
 lazy val root = (project in file("."))
-  .enablePlugins(GitVersioning)
+  .enablePlugins(GitVersioning, GatlingPlugin)
   .settings(
     name         := "gatling-kafka-plugin",
     scalaVersion := scalaV,
     libraryDependencies ++= gatling,
     libraryDependencies ++= kafka,
-    libraryDependencies ++= Seq(avro4s, avroCore, avroSerdes),
+    libraryDependencies ++= Seq(avro4s, avroCore, avroSerdes, avroSerializers),
     schemaRegistrySubjects ++= avroSchemas,
 //    schemaRegistryUrl := "http://test-schema-registry:8081",
     resolvers ++= Seq(
