@@ -14,7 +14,6 @@ jobs:
     services:
       zookeeper:
         image: wurstmeister/zookeeper
-        hostname: zoo1
         env:
           ZOO_MY_ID: "1"
           ZOO_PORT: "2181"
@@ -23,8 +22,6 @@ jobs:
           - '2181:2181'
       kafka:
         image: wurstmeister/kafka:2.13-2.6.3
-        depends_on:
-          - zookeeper
         env:
           KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
           KAFKA_ADVERTISED_HOST_NAME: kafka
@@ -40,16 +37,12 @@ jobs:
           - '9093:9093'
       schema-registry:
         image: confluentinc/cp-schema-registry:7.2.1
-        hostname: schema-registry
-        depends_on:
-          - zookeeper
-          - kafka
-        ports:
-              - '9094:9094'
         env:
           SCHEMA_REGISTRY_HOST_NAME: schema-registry
           SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'kafka:9092,localhost:9093'
           SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:9094
+        ports:
+          - '9094:9094'
 
     steps:
       - name: Checkout
