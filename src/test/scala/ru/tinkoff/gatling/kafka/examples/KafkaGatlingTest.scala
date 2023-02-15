@@ -81,7 +81,7 @@ class KafkaGatlingTest extends Simulation {
     .matchByValue
 
   val kafkaAvro4sConf: KafkaProtocol = kafka
-    .topic("test.avro")
+    .topic("test.t")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -161,7 +161,7 @@ class KafkaGatlingTest extends Simulation {
       kafka("Request Reply Bytes").requestReply
         .requestTopic("myTopic")
         .replyTopic("test.t")
-        .send[Array[Byte], Array[Byte]]("test".getBytes(), "tstBytes".getBytes()),
+        .send[Array[Byte], Array[Byte]]("testWO".getBytes(), "tstBytesWO".getBytes()),
     )
 
   setUp(
