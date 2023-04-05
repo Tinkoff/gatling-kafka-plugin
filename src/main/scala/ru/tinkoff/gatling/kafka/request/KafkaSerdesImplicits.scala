@@ -34,11 +34,11 @@ trait KafkaSerdesImplicits {
 
   implicit def serdeClass[T](implicit schemaRegUrl: String): Serde[T] = new Serde[T] {
     override def serializer(): Serializer[T] = new KafkaAvroSerializer(
-      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16)
+      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16),
     ).asInstanceOf[Serializer[T]]
 
     override def deserializer(): Deserializer[T] = new KafkaAvroDeserializer(
-      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16)
+      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16),
     ).asInstanceOf[Deserializer[T]]
   }
 

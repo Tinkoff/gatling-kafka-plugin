@@ -39,12 +39,12 @@ class AvroClassWithRequestReplySimulation extends Simulation {
   val kafkaProtocolRRAvro: KafkaProtocol = kafka.requestReply
     .producerSettings(
       Map(
-        ProducerConfig.ACKS_CONFIG -> "1",
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9093",
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.StringSerializer",
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
         ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "io.confluent.kafka.serializers.KafkaAvroSerializer",
         // schema registry url is required for KafkaAvroSerializer and KafkaAvroDeserializer
-        "schema.registry.url" -> "http://localhost:9094",
+        "schema.registry.url"                        -> "http://localhost:9094",
       ),
     )
     .consumeSettings(
