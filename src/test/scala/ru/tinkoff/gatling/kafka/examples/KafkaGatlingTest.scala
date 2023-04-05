@@ -136,7 +136,7 @@ class KafkaGatlingTest extends Simulation {
         .check(jsonPath("$.m").is("dkf")),
     )
 
-  val scnwokey: ScenarioBuilder = scenario("Request String")
+  val scnwokey: ScenarioBuilder = scenario("Request String without key")
     .exec(
       kafka("Request String")
         .send[String]("foo"),
