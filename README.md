@@ -113,7 +113,7 @@ public static Deserializer<AvroClass> de = (Deserializer) new KafkaAvroDeseriali
 To use avro messages as payload in key or value, you must define serde for your class:
 
 ```kotlin
-    val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<AvroClass>
+val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<AvroClass>
 val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<AvroClass>
 ```
 
