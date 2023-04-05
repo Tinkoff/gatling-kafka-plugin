@@ -44,7 +44,7 @@ class TrackersPool(
         builder.stream[Array[Byte], Array[Byte]](outputTopic).foreach { case (k, v) =>
           val message = KafkaProtocolMessage(k, v, inputTopic, outputTopic)
           if (messageMatcher.responseMatch(message) == null) {
-            logger.error(s"no messageMatcher key for read message")
+            logger.error(s"no messageMatcher key for read message ${message} in inputTopic ${inputTopic}, outputTopic ${outputTopic}")
           } else {
             if (k == null || v == null)
               logger.info(s" --- received message with null key or value")
