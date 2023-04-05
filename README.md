@@ -67,3 +67,60 @@ To run you should create scala object in root project directory and type `sbt ru
 ### Example download avro-schema
 
 Example [here](https://github.com/TinkoffCreditSystems/gatling-kafka-plugin/tree/master/src/test/scala/ru/tinkoff/gatling/kafka/examples)
+
+## Avro support in Request-Reply
+
+### Scala
+
+To use avro messages as payload in key or value, you must:
+
+- define implicit for schema registry url:
+
+```scala
+implicit val schemaRegUrl: String = "http://localhost:9094"
+```
+
+- or define serde for your class:
+
+```scala
+val ser =
+  new KafkaAvroSerializer(
+    new CachedSchemaRegistryClient("schRegUrl".split(',').toList.asJava, 16),
+  )
+
+val de =
+  new KafkaAvroDeserializer(
+    new CachedSchemaRegistryClient("schRegUrl".split(',').toList.asJava, 16),
+  )
+
+implicit val serdeClass: Serde[AvroClass] = new Serde[AvroClass] {
+  override def serializer(): Serializer[AvroClass] = ser.asInstanceOf[Serializer[AvroClass]]
+  override def deserializer(): Deserializer[AvroClass] = de.asInstanceOf[Deserializer[AvroClass]]
+}
+```
+
+### Java
+
+To use avro messages as payload in key or value, you must define serde for your class:
+
+```java
+public static Serializer<AvroClass> ser = (Serializer) new KafkaAvroSerializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
+public static Deserializer<AvroClass> de = (Deserializer) new KafkaAvroDeserializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
+```
+
+### Kotlin
+
+To use avro messages as payload in key or value, you must define serde for your class:
+
+```kotlin
+    val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<AvroClass>
+val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<AvroClass>
+```
+
+### Example usage Avro in Request-Reply
+
+Example [scala](src/test/scala/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.scala)
+
+Example [java](src/test/java/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.java)
+
+Example [kotlin](src/test/kotlin/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.kt)
