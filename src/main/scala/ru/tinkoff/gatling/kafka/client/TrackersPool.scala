@@ -45,7 +45,7 @@ class TrackersPool(
           val message = KafkaProtocolMessage(k, v, inputTopic, outputTopic)
           if (messageMatcher.responseMatch(message) == null) {
             logger.error(
-              s"no messageMatcher key for read message in inputTopic ${inputTopic}, outputTopic ${outputTopic}",
+              s"no messageMatcher key for read message ${message} in inputTopic ${inputTopic}, outputTopic ${outputTopic}",
             )
           } else {
             if (k == null || v == null)

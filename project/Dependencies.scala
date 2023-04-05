@@ -2,8 +2,8 @@ import sbt._
 
 object Dependencies {
   private object Versions {
-    // TODO: 7.3.1-ce (kafka 3.3) throw exception on test startup https://issues.apache.org/jira/browse/KAFKA-14270, will be fixed in kafka 3.4
-    val kafka   = "3.4.0"
+    // TODO: 7.3.x (kafka 3.3) throw exception on test startup https://issues.apache.org/jira/browse/KAFKA-14270, fixed in kafka 3.4 (waiting confluent release 7.4.x)
+    val kafka   = "7.3.3-ce"
     val gatling = "3.9.0"
     val avro4s  = "4.1.0"
     val avro    = "1.11.1"
