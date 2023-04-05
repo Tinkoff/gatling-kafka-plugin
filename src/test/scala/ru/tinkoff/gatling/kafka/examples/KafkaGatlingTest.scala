@@ -26,7 +26,7 @@ class KafkaGatlingTest extends Simulation {
   implicit val ingredientHeaders: Headers                   = new RecordHeaders()
 
   val kafkaConf: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t1")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -37,7 +37,7 @@ class KafkaGatlingTest extends Simulation {
     )
 
   val kafkaConfBytes: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t2")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -77,11 +77,11 @@ class KafkaGatlingTest extends Simulation {
         "bootstrap.servers" -> "localhost:9093",
       ),
     )
-    .timeout(5.seconds)
+    .timeout(7.seconds)
     .matchByValue
 
   val kafkaAvro4sConf: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t3")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -113,14 +113,14 @@ class KafkaGatlingTest extends Simulation {
         "bootstrap.servers" -> "localhost:9093",
       ),
     )
-    .timeout(5.seconds)
+    .timeout(7.seconds)
     .matchByMessage(matchByOwnVal)
 
   val scnRR: ScenarioBuilder = scenario("RequestReply String")
     .exec(
       kafka("Request Reply String").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
+        .requestTopic("myTopic1")
+        .replyTopic("test.t1")
         .send[String, String]("testCheckJson", """{ "m": "dkf" }""")
         .check(jsonPath("$.m").is("dkf")),
     )
@@ -141,8 +141,8 @@ class KafkaGatlingTest extends Simulation {
   val scnRR2: ScenarioBuilder = scenario("RequestReply Bytes")
     .exec(
       kafka("Request Reply Bytes").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
+        .requestTopic("myTopic2")
+        .replyTopic("test.t2")
         .send[Array[Byte], Array[Byte]]("test".getBytes(), "tstBytes".getBytes()),
     )
 
@@ -159,8 +159,8 @@ class KafkaGatlingTest extends Simulation {
   val scnRRwo: ScenarioBuilder = scenario("RequestReply w/o answer")
     .exec(
       kafka("Request Reply Bytes").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
+        .requestTopic("myTopic3")
+        .replyTopic("test.t3")
         .send[Array[Byte], Array[Byte]]("testWO".getBytes(), "tstBytesWO".getBytes()),
     )
 
