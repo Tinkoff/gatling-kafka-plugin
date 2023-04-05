@@ -36,6 +36,17 @@ class KafkaGatlingTest extends Simulation {
       ),
     )
 
+  val kafkaConfwoKey: KafkaProtocol = kafka
+    .topic("myTopic3")
+    .properties(
+      Map(
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.StringSerializer",
+      ),
+    )
+
   val kafkaConfBytes: KafkaProtocol = kafka
     .topic("test.t2")
     .properties(
@@ -125,11 +136,13 @@ class KafkaGatlingTest extends Simulation {
         .check(jsonPath("$.m").is("dkf")),
     )
 
-  val scn: ScenarioBuilder = scenario("Request String")
+  val scnwokey: ScenarioBuilder = scenario("Request String")
     .exec(
       kafka("Request String")
         .send[String]("foo"),
     )
+
+  val scn: ScenarioBuilder = scenario("Request String")
     .exec(kafka("Request String 2").send[String, String]("testCheckJson", """{ "m": "dkf" }"""))
 
   val scn2: ScenarioBuilder = scenario("Request Byte")
@@ -171,6 +184,7 @@ class KafkaGatlingTest extends Simulation {
     scn2.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfBytes),
     scnAvro4s.inject(atOnceUsers(1)).protocols(kafkaAvro4sConf),
     scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
+    scnwokey.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfwoKey),
   ).assertions(
     global.failedRequests.percent.lt(15.0),
   )
