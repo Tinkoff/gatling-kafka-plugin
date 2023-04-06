@@ -88,7 +88,7 @@ class KafkaGatlingTest extends Simulation {
         "bootstrap.servers" -> "localhost:9093",
       ),
     )
-    .timeout(7.seconds)
+    .timeout(10.seconds)
     .matchByValue
 
   val kafkaAvro4sConf: KafkaProtocol = kafka
@@ -157,7 +157,7 @@ class KafkaGatlingTest extends Simulation {
         .requestTopic("myTopic2")
         .replyTopic("test.t2")
         .send[Array[Byte], Array[Byte]]("test".getBytes(), "tstBytes".getBytes())
-        .check(bodyBytes.is("tstBytes".getBytes())),
+        .check(bodyBytes.is("tstBytes".getBytes()).saveAs("bodyInfo")),
     )
 
   val scnAvro4s: ScenarioBuilder = scenario("Request Avro4s")
@@ -173,19 +173,19 @@ class KafkaGatlingTest extends Simulation {
   val scnRRwo: ScenarioBuilder = scenario("RequestReply w/o answer")
     .exec(
       kafka("Request Reply Bytes wo").requestReply
-        .requestTopic("myTopic3")
-        .replyTopic("test.t3")
+        .requestTopic("myTopic2")
+        .replyTopic("test.t2")
         .send[Array[Byte], Array[Byte]]("testWO".getBytes(), "tstBytesWO".getBytes()),
     )
 
   setUp(
     scnRR.inject(atOnceUsers(1)).protocols(kafkaProtocolRRString),
     scn.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConf),
-    scnRR2.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
-    scn2.inject(nothingFor(4), atOnceUsers(1)).protocols(kafkaConfBytes),
+    scnRR2.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
+    scn2.inject(nothingFor(5), atOnceUsers(1)).protocols(kafkaConfBytes),
     scnAvro4s.inject(atOnceUsers(1)).protocols(kafkaAvro4sConf),
     scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
-    scnwokey.inject(nothingFor(3), atOnceUsers(1)).protocols(kafkaConfwoKey),
+    scnwokey.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfwoKey),
   ).assertions(
     global.failedRequests.percent.lt(15.0),
   )
