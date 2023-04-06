@@ -88,7 +88,24 @@ class KafkaGatlingTest extends Simulation {
         "bootstrap.servers" -> "localhost:9093",
       ),
     )
-    .timeout(10.seconds)
+    .timeout(5.seconds)
+    .matchByValue
+
+  val kafkaProtocolRRBytes2: KafkaProtocol = kafka.requestReply
+    .producerSettings(
+      Map(
+        ProducerConfig.ACKS_CONFIG -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.ByteArraySerializer",
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.ByteArraySerializer",
+      ),
+    )
+    .consumeSettings(
+      Map(
+        "bootstrap.servers" -> "localhost:9093",
+      ),
+    )
+    .timeout(1.seconds)
     .matchByValue
 
   val kafkaAvro4sConf: KafkaProtocol = kafka
@@ -182,9 +199,9 @@ class KafkaGatlingTest extends Simulation {
     scnRR.inject(atOnceUsers(1)).protocols(kafkaProtocolRRString),
     scn.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConf),
     scnRR2.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
-    scn2.inject(nothingFor(5), atOnceUsers(1)).protocols(kafkaConfBytes),
+    scn2.inject(nothingFor(2), atOnceUsers(1)).protocols(kafkaConfBytes),
     scnAvro4s.inject(atOnceUsers(1)).protocols(kafkaAvro4sConf),
-    scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
+    scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes2),
     scnwokey.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfwoKey),
   ).assertions(
     global.failedRequests.percent.lt(15.0),
