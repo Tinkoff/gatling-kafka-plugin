@@ -1,12 +1,16 @@
 package ru.tinkoff.gatling.kafka.request
 
+import io.confluent.kafka.schemaregistry.client.CachedSchemaRegistryClient
+import io.confluent.kafka.serializers.{KafkaAvroDeserializer, KafkaAvroSerializer}
 import io.confluent.kafka.streams.serdes.avro.GenericAvroSerde
 import org.apache.avro.generic.GenericRecord
-import org.apache.kafka.common.serialization.{Serde, Serdes => JSerdes}
+import org.apache.kafka.common.serialization.{Deserializer, Serde, Serializer, Serdes => JSerdes}
 import org.apache.kafka.streams.kstream.WindowedSerdes
 
 import java.nio.ByteBuffer
 import java.util.UUID
+
+import scala.jdk.CollectionConverters._
 
 trait KafkaSerdesImplicits {
   implicit def stringSerde: Serde[String]                             = JSerdes.String()
@@ -28,5 +32,16 @@ trait KafkaSerdesImplicits {
   implicit def sessionWindowedSerde[T](implicit tSerde: Serde[T]): WindowedSerdes.SessionWindowedSerde[T] =
     new WindowedSerdes.SessionWindowedSerde[T](tSerde)
 
+  implicit def serdeClass[T](implicit schemaRegUrl: String): Serde[T] = new Serde[T] {
+    override def serializer(): Serializer[T] = new KafkaAvroSerializer(
+      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16),
+    ).asInstanceOf[Serializer[T]]
+
+    override def deserializer(): Deserializer[T] = new KafkaAvroDeserializer(
+      new CachedSchemaRegistryClient(schemaRegUrl.split(',').toList.asJava, 16),
+    ).asInstanceOf[Deserializer[T]]
+  }
+
   implicit val avroSerde: Serde[GenericRecord] = new GenericAvroSerde()
+
 }
