@@ -94,9 +94,9 @@ class KafkaGatlingTest extends Simulation {
   val kafkaProtocolRRBytes2: KafkaProtocol = kafka.requestReply
     .producerSettings(
       Map(
-        ProducerConfig.ACKS_CONFIG -> "1",
-        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG -> "localhost:9093",
-        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.ByteArraySerializer",
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.ByteArraySerializer",
         ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.ByteArraySerializer",
       ),
     )
