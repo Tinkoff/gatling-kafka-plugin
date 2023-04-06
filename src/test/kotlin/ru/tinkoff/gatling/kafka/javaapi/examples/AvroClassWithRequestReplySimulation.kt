@@ -11,8 +11,8 @@ import java.time.Duration
 class AvroClassWithRequestReplySimulation : Simulation() {
 
     // example of using custom serde
-    val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<AvroClass>
-    val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<AvroClass>
+    val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<MyAvroClass>
+    val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<MyAvroClass>
 
     // protocol
     val kafkaProtocolRRAvro = kafka()
@@ -38,7 +38,7 @@ class AvroClassWithRequestReplySimulation : Simulation() {
     val kafkaMessage = kafka("RequestReply").requestReply()
         .requestTopic("request.t")
         .replyTopic("reply.t")
-        .send("key", AvroClass(), String::class.java, AvroClass::class.java, ser, de)
+        .send("key", MyAvroClass(), String::class.java, MyAvroClass::class.java, ser, de)
 
     // simulation
     init {

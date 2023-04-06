@@ -93,9 +93,9 @@ val de =
     new CachedSchemaRegistryClient("schRegUrl".split(',').toList.asJava, 16),
   )
 
-implicit val serdeClass: Serde[AvroClass] = new Serde[AvroClass] {
-  override def serializer(): Serializer[AvroClass] = ser.asInstanceOf[Serializer[AvroClass]]
-  override def deserializer(): Deserializer[AvroClass] = de.asInstanceOf[Deserializer[AvroClass]]
+implicit val serdeClass: Serde[MyAvroClass] = new Serde[MyAvroClass] {
+  override def serializer(): Serializer[MyAvroClass] = ser.asInstanceOf[Serializer[MyAvroClass]]
+  override def deserializer(): Deserializer[MyAvroClass] = de.asInstanceOf[Deserializer[MyAvroClass]]
 }
 ```
 
@@ -104,8 +104,8 @@ implicit val serdeClass: Serde[AvroClass] = new Serde[AvroClass] {
 To use avro messages as payload in key or value, you must define serde for your class:
 
 ```java
-public static Serializer<AvroClass> ser = (Serializer) new KafkaAvroSerializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
-public static Deserializer<AvroClass> de = (Deserializer) new KafkaAvroDeserializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
+public static Serializer<MyAvroClass> ser = (Serializer) new KafkaAvroSerializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
+public static Deserializer<MyAvroClass> de = (Deserializer) new KafkaAvroDeserializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
 ```
 
 ### Kotlin
@@ -113,8 +113,8 @@ public static Deserializer<AvroClass> de = (Deserializer) new KafkaAvroDeseriali
 To use avro messages as payload in key or value, you must define serde for your class:
 
 ```kotlin
-val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<AvroClass>
-val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<AvroClass>
+val ser = KafkaAvroSerializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Serializer<MyAvroClass>
+val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(','), 16),) as Deserializer<MyAvroClass>
 ```
 
 ### Example usage Avro in Request-Reply

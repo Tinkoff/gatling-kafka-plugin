@@ -29,10 +29,10 @@ class AvroClassWithRequestReplySimulation extends Simulation {
       new CachedSchemaRegistryClient("schRegUrl".split(',').toList.asJava, 16),
     )
 
-  implicit val serdeClass: Serde[AvroClass] = new Serde[AvroClass] {
-    override def serializer(): Serializer[AvroClass] = ser.asInstanceOf[Serializer[AvroClass]]
+  implicit val serdeClass: Serde[MyAvroClass] = new Serde[MyAvroClass] {
+    override def serializer(): Serializer[MyAvroClass] = ser.asInstanceOf[Serializer[MyAvroClass]]
 
-    override def deserializer(): Deserializer[AvroClass] = de.asInstanceOf[Deserializer[AvroClass]]
+    override def deserializer(): Deserializer[MyAvroClass] = de.asInstanceOf[Deserializer[MyAvroClass]]
   }
 
   // protocol
@@ -55,13 +55,13 @@ class AvroClassWithRequestReplySimulation extends Simulation {
     .timeout(5.seconds)
 
   // message
-  val kafkaMessage: KafkaRequestReplyActionBuilder[String, AvroClass] = kafka("RequestReply").requestReply
+  val kafkaMessage: KafkaRequestReplyActionBuilder[String, MyAvroClass] = kafka("RequestReply").requestReply
     .requestTopic("request.t")
     .replyTopic("reply.t")
-    .send[String, AvroClass]("key", AvroClass())
+    .send[String, MyAvroClass]("key", MyAvroClass())
 
   // simulation
   setUp(scenario("Kafka RequestReply Avro").exec(kafkaMessage).inject(atOnceUsers(1))).protocols(kafkaProtocolRRAvro)
 
-  case class AvroClass()
+  case class MyAvroClass()
 }

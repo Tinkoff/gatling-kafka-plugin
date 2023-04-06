@@ -17,9 +17,9 @@ import static ru.tinkoff.gatling.kafka.javaapi.KafkaDsl.kafka;
 public class AvroClassWithRequestReplySimulation extends Simulation {
 
     // example of using custom serde
-    public static Serializer<AvroClass> ser =
+    public static Serializer<MyAvroClass> ser =
             (Serializer) new KafkaAvroSerializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
-    public static Deserializer<AvroClass> de =
+    public static Deserializer<MyAvroClass> de =
             (Deserializer) new KafkaAvroDeserializer(new CachedSchemaRegistryClient(Arrays.asList("schRegUrl".split(",")), 16));
 
     // protocol
@@ -43,13 +43,13 @@ public class AvroClassWithRequestReplySimulation extends Simulation {
     public static RequestReplyBuilder<?, ?> kafkaMessage = kafka("RequestReply").requestReply()
             .requestTopic("request.t")
             .replyTopic("reply.t")
-            .send("key", new AvroClass(), String.class, AvroClass.class, ser, de);
+            .send("key", new MyAvroClass(), String.class, MyAvroClass.class, ser, de);
 
     // simulation
     {
         setUp(scenario("Kafka RequestReply Avro").exec(kafkaMessage).injectOpen(atOnceUsers(1))).protocols(kafkaProtocolRRAvro);
     }
 
-    private static class AvroClass {
+    private static class MyAvroClass {
     }
 }
