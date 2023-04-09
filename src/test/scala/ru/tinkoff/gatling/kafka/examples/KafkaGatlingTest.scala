@@ -26,7 +26,18 @@ class KafkaGatlingTest extends Simulation {
   implicit val ingredientHeaders: Headers                   = new RecordHeaders()
 
   val kafkaConf: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t1")
+    .properties(
+      Map(
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.StringSerializer",
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.StringSerializer",
+      ),
+    )
+
+  val kafkaConfwoKey: KafkaProtocol = kafka
+    .topic("myTopic3")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -37,7 +48,7 @@ class KafkaGatlingTest extends Simulation {
     )
 
   val kafkaConfBytes: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t2")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -80,8 +91,25 @@ class KafkaGatlingTest extends Simulation {
     .timeout(5.seconds)
     .matchByValue
 
+  val kafkaProtocolRRBytes2: KafkaProtocol = kafka.requestReply
+    .producerSettings(
+      Map(
+        ProducerConfig.ACKS_CONFIG                   -> "1",
+        ProducerConfig.BOOTSTRAP_SERVERS_CONFIG      -> "localhost:9093",
+        ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG   -> "org.apache.kafka.common.serialization.ByteArraySerializer",
+        ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG -> "org.apache.kafka.common.serialization.ByteArraySerializer",
+      ),
+    )
+    .consumeSettings(
+      Map(
+        "bootstrap.servers" -> "localhost:9093",
+      ),
+    )
+    .timeout(1.seconds)
+    .matchByValue
+
   val kafkaAvro4sConf: KafkaProtocol = kafka
-    .topic("test.t")
+    .topic("test.t3")
     .properties(
       Map(
         ProducerConfig.ACKS_CONFIG                   -> "1",
@@ -113,23 +141,25 @@ class KafkaGatlingTest extends Simulation {
         "bootstrap.servers" -> "localhost:9093",
       ),
     )
-    .timeout(5.seconds)
+    .timeout(7.seconds)
     .matchByMessage(matchByOwnVal)
 
   val scnRR: ScenarioBuilder = scenario("RequestReply String")
     .exec(
       kafka("Request Reply String").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
+        .requestTopic("myTopic1")
+        .replyTopic("test.t1")
         .send[String, String]("testCheckJson", """{ "m": "dkf" }""")
         .check(jsonPath("$.m").is("dkf")),
     )
 
-  val scn: ScenarioBuilder = scenario("Request String")
+  val scnwokey: ScenarioBuilder = scenario("Request String without key")
     .exec(
       kafka("Request String")
         .send[String]("foo"),
     )
+
+  val scn: ScenarioBuilder = scenario("Request String")
     .exec(kafka("Request String 2").send[String, String]("testCheckJson", """{ "m": "dkf" }"""))
 
   val scn2: ScenarioBuilder = scenario("Request Byte")
@@ -141,9 +171,10 @@ class KafkaGatlingTest extends Simulation {
   val scnRR2: ScenarioBuilder = scenario("RequestReply Bytes")
     .exec(
       kafka("Request Reply Bytes").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
-        .send[Array[Byte], Array[Byte]]("test".getBytes(), "tstBytes".getBytes()),
+        .requestTopic("myTopic2")
+        .replyTopic("test.t2")
+        .send[Array[Byte], Array[Byte]]("test".getBytes(), "tstBytes".getBytes())
+        .check(bodyBytes.is("tstBytes".getBytes()).saveAs("bodyInfo")),
     )
 
   val scnAvro4s: ScenarioBuilder = scenario("Request Avro4s")
@@ -158,9 +189,9 @@ class KafkaGatlingTest extends Simulation {
 
   val scnRRwo: ScenarioBuilder = scenario("RequestReply w/o answer")
     .exec(
-      kafka("Request Reply Bytes").requestReply
-        .requestTopic("myTopic")
-        .replyTopic("test.t")
+      kafka("Request Reply Bytes wo").requestReply
+        .requestTopic("myTopic2")
+        .replyTopic("test.t2")
         .send[Array[Byte], Array[Byte]]("testWO".getBytes(), "tstBytesWO".getBytes()),
     )
 
@@ -168,9 +199,10 @@ class KafkaGatlingTest extends Simulation {
     scnRR.inject(atOnceUsers(1)).protocols(kafkaProtocolRRString),
     scn.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConf),
     scnRR2.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
-    scn2.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfBytes),
+    scn2.inject(nothingFor(2), atOnceUsers(1)).protocols(kafkaConfBytes),
     scnAvro4s.inject(atOnceUsers(1)).protocols(kafkaAvro4sConf),
-    scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes),
+    scnRRwo.inject(atOnceUsers(1)).protocols(kafkaProtocolRRBytes2),
+    scnwokey.inject(nothingFor(1), atOnceUsers(1)).protocols(kafkaConfwoKey),
   ).assertions(
     global.failedRequests.percent.lt(15.0),
   )
