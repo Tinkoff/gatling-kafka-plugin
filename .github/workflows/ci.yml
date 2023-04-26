@@ -56,10 +56,10 @@ jobs:
           java-version: openjdk@1.17
 
       - name: Test Release
-        run: sbt clean scalafmtCheckAll scalafmtSbtCheck compile test
+        run: sbt clean scalafmtCheckAll scalafmtSbtCheck compile coverage "Gatling / testOnly ru.tinkoff.gatling.kafka.examples.KafkaGatlingTest" test coverageOff
         
-      - name: Tests
-        run: sbt coverage "Gatling / testOnly ru.tinkoff.gatling.kafka.examples.KafkaGatlingTest" coverageReport
+      - name: Coverage Report
+        run: sbt coverageReport
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -81,7 +81,7 @@ jobs:
           java-version: openjdk@1.17
 
       - name: Publish Release
-        run: sbt coverageOff ci-release
+        run: sbt ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
