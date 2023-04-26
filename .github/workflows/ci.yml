@@ -67,7 +67,7 @@ jobs:
   publish:
     name: Publish Release
     needs: [test]
-#    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
