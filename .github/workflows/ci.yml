@@ -59,7 +59,7 @@ jobs:
         run: sbt clean scalafmtCheckAll scalafmtSbtCheck compile test
         
       - name: Tests
-        run: sbt coverage "Gatling / testOnly ru.tinkoff.gatling.kafka.examples.KafkaGatlingTest" coverageReport coverageOff
+        run: sbt coverage "Gatling / testOnly ru.tinkoff.gatling.kafka.examples.KafkaGatlingTest" coverageReport
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
@@ -67,7 +67,7 @@ jobs:
   publish:
     name: Publish Release
     needs: [test]
-    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+#    if: github.event_name != 'pull_request' && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
     runs-on: ubuntu-20.04
     steps:
       - name: Checkout
@@ -81,7 +81,7 @@ jobs:
           java-version: openjdk@1.17
 
       - name: Publish Release
-        run: sbt ci-release
+        run: sbt coverageOff ci-release
         env:
           PGP_PASSPHRASE: ${{ secrets.PGP_PASSPHRASE }}
           PGP_SECRET: ${{ secrets.PGP_SECRET }}
