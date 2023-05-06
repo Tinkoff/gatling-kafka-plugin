@@ -31,7 +31,7 @@ object Dependencies {
   lazy val avroCompiler: ModuleID = "org.apache.avro" % "avro-compiler" % Versions.avro
   lazy val avroCore: ModuleID     = "org.apache.avro" % "avro"          % Versions.avro
   lazy val avroSerdes: ModuleID   =
-    ("io.confluent" % "kafka-streams-avro-serde" % "7.3.3").exclude("org.apache.kafka", "kafka-streams-scala")
-  lazy val avroSerializers: ModuleID = "io.confluent" % "kafka-avro-serializer" % "7.3.3"
+    ("io.confluent" % "kafka-streams-avro-serde" % "7.4.0").exclude("org.apache.kafka", "kafka-streams-scala")
+  lazy val avroSerializers: ModuleID = "io.confluent" % "kafka-avro-serializer" % "7.4.0"
 
 }
