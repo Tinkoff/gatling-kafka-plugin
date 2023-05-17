@@ -158,6 +158,10 @@ class KafkaGatlingTest extends Simulation {
       kafka("Request String")
         .send[String]("foo"),
     )
+    .exec(
+      kafka("Request Stirng With null key")
+        .send[String, String](null, "nullkey")
+    )
 
   val scn: ScenarioBuilder = scenario("Request String")
     .exec(kafka("Request String 2").send[String, String]("testCheckJson", """{ "m": "dkf" }"""))
