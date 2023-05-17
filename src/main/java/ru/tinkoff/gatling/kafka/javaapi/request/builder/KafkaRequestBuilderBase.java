@@ -56,6 +56,16 @@ public class KafkaRequestBuilderBase {
                 ru.tinkoff.gatling.kafka.request.builder.Sender.noSchemaSender()));
     }
 
+    public <K, V> RequestBuilder<?, ?> send(V payload, Headers headers) {
+        return new RequestBuilder<>(
+                wrapped.send(
+                        null,
+                        calculateExpression(payload),
+                        toStaticValueExpression(headers),
+                        ru.tinkoff.gatling.kafka.request.builder.Sender.noSchemaSender()
+                ));
+    }
+
     public ReqRepBase requestReply() {
         return new ReqRepBase(requestName);
     }

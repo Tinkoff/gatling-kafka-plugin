@@ -16,8 +16,12 @@ case class KafkaRequestBuilderBase(requestName: Expression[String]) {
       headers: Expression[Headers] = List.empty[Header],
   )(implicit
       sender: Sender[K, V],
-  ): RequestBuilder[K, V] =
-    sender.send(requestName, Some(key), payload, Some(headers))
+  ): RequestBuilder[K, V] = {
+    if (key == null)
+      sender.send(requestName, None, payload, Some(headers))
+    else
+      sender.send(requestName, Some(key), payload, Some(headers))
+  }
 
   def send[V](payload: Expression[V])(implicit sender: Sender[Nothing, V]): RequestBuilder[_, V] =
     sender.send(requestName, None, payload)
