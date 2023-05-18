@@ -160,7 +160,7 @@ class KafkaGatlingTest extends Simulation {
     )
     .exec(
       kafka("Request Stirng With null key")
-        .send[String, String](null, "nullkey")
+        .send[Any, String](null, "nullkey"),
     )
 
   val scn: ScenarioBuilder = scenario("Request String")
