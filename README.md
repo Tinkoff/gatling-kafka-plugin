@@ -121,6 +121,6 @@ val de = KafkaAvroDeserializer(CachedSchemaRegistryClient("schRegUrl".split(',')
 
 Example [scala](src/test/scala/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.scala)
 
-Example [java](src/test/java/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.java)
+Example [java](src/test/java/ru/tinkoff/gatling/kafka/javaapi/examples/AvroClassWithRequestReplySimulation.java)
 
-Example [kotlin](src/test/kotlin/ru/tinkoff/gatling/kafka/examples/AvroClassWithRequestReplySimulation.kt)
+Example [kotlin](src/test/kotlin/ru/tinkoff/gatling/kafka/javaapi/examples/AvroClassWithRequestReplySimulation.kt)
