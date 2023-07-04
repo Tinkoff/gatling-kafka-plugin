@@ -11,4 +11,4 @@ addSbtPlugin("com.github.sbt" % "sbt-avro"                   % "3.4.2")
 addSbtPlugin("ru.tinkoff"     % "sbt-schema-registry-plugin" % "0.2.1")
 addSbtPlugin("org.scoverage"  % "sbt-scoverage"              % "2.0.7")
 
-libraryDependencies += "org.apache.avro" % "avro-compiler" % "1.11.1"
+libraryDependencies += "org.apache.avro" % "avro-compiler" % "1.11.2"
